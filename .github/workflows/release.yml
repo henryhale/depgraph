@@ -1,0 +1,37 @@
+name: depgraph release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: set up golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      - name: build binary
+        run: ./build.sh ci
+
+      - name: list binaries
+        run: ls depgraph-*
+
+      - name: create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            depgraph-*
+            install-linux.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
