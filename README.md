@@ -18,7 +18,7 @@ resolution/visualization tools that are language-specific or parser-centric,
 depgraph is language agnostic since it uses regular expressions to match import 
 and export statements from which a dependency graph is constructed. While this is
 experimental, it produces amazing results for small vanilla projects. The graph 
-is formatted and output as json, jsoncanvas, or mermaid. 
+is formatted and output as json, [jsoncanvas](jsoncanvas.org), or [mermaid](mermaid.js.org). 
 
 ## Why?
 
@@ -33,10 +33,10 @@ but not anymore, depgraph is here!
 ## Features
 
 - [x] cli
-- [ ] multi-language support (planning on c, cpp, js, ts, go, php and others)
+- [x] export dependency graphs as formatted text (json, [jsoncanvas](jsoncanvas.org), [mermaid](mermaid.js.org))
+- [x] multi-language support (planning on c, cpp, js, ts, go, php and others) - _**work in progress**_
 - [ ] interactive web interface (maybe d3.js or cyptoscape.js)
 - [ ] generating images from the graph (like png, svg)
-- [ ] export dependency graphs (probably mermaid)
 
 ... and more to come
 
