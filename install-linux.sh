@@ -30,4 +30,5 @@ echo "downloading binary..."
 curl -L "$BIN_URL" -o "$DEST_DIR/depgraph"
 chmod +x "$DEST_DIR/depgraph"
 
-echo "successfully installed `depgraph` at $DEST_DIR/depgraph"
+echo "successfully installed depgraph at $DEST_DIR/depgraph"
+echo -e "\ntry it now:\n\t$ depgraph -h"
