@@ -32,6 +32,6 @@ jobs:
         with:
           files: |
             depgraph-*
-            install-linux.sh
+            install.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
