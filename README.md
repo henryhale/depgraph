@@ -50,8 +50,6 @@ but not anymore, depgraph is here!
 - Windows:
 	Go to the [Github releases page](https://github.com/henryhale/depgraph/releases/latest) and download a prebuilt executable for your machine.
 
->:warning: work in progress
-
 ## Usage
 
 Once installed, use
