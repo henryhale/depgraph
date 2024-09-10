@@ -1,6 +1,12 @@
+<div align=center>
+
 # depgraph
 
 A developer's tool to understanding new codebases
+
+[![](https://mermaid.ink/img/pako:eNptkE0OgjAQha9CZi0egIUrl650SQ2ZthNBAiX9STDA3W0pEhRXff3m9c10BhBKEmTw0NiVyeXK2iQxjscrHp8mgGRWBfY59vcAqJVfRr4agyp4n_P_RrEYf3mpnKGYMMuCK5-hYsiHCaXqivJ4bOPDdGl6Gr3JjOv7UOHbyvKJwMWWLzPv-Lbrrhh3AwdoSDdYSb_DIZgY2JIaYpB5KVHXDFg7eR86q26vVkBmtaMDuE6ipXOFfgNNhNMbLWiKbg?type=png)](https://mermaid.live/edit#pako:eNptkE0OgjAQha9CZi0egIUrl650SQ2ZthNBAiX9STDA3W0pEhRXff3m9c10BhBKEmTw0NiVyeXK2iQxjscrHp8mgGRWBfY59vcAqJVfRr4agyp4n_P_RrEYf3mpnKGYMMuCK5-hYsiHCaXqivJ4bOPDdGl6Gr3JjOv7UOHbyvKJwMWWLzPv-Lbrrhh3AwdoSDdYSb_DIZgY2JIaYpB5KVHXDFg7eR86q26vVkBmtaMDuE6ipXOFfgNNhNMbLWiKbg)
+
+</div>
 
 ## Overview
 
@@ -78,7 +84,7 @@ depgraph -d /path/to/project -f json -l go > stats.json
 ```
 
 >Note: In case the output format is `mermaid`, you can use the mermaid vscode 
->extension or [mermaid.live](https://mermaid.live) to view the output.
+>extension or Obsidian or [mermaid.live](https://mermaid.live) to view the output.
 >In case of `jsoncanvas`, you can use Obsidian.
 
 ## How it works
