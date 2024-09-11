@@ -20,6 +20,10 @@ and export statements from which a dependency graph is constructed. While this i
 experimental, it produces amazing results for small vanilla projects. The graph
 is formatted and output as json, [jsoncanvas](jsoncanvas.org), or [mermaid](mermaid.js.org).
 
+> [!WARNING]
+> depgraph is experimental and incomplete. It is under active
+> development.
+
 ## Why?
 
 I landed onto a codebase and couldn't figure out what was going on fast;
