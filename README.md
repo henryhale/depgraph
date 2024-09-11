@@ -34,7 +34,13 @@ but not anymore, depgraph is here!
 
 - [x] cli
 - [x] export dependency graphs as formatted text (json, [jsoncanvas](jsoncanvas.org), [mermaid](mermaid.js.org))
-- [x] multi-language support (planning on c, cpp, js, ts, go, php and others) - _**work in progress**_
+- multi-language support - _**work in progress**_
+  - [x] js, ts - _almost done_
+  - [ ] go
+  - [ ] python
+  - [ ] c, cpp
+  - [ ] php
+  - [ ] ....
 - [ ] interactive web interface (maybe d3.js or cyptoscape.js)
 - [ ] generating images from the graph (like png, svg)
 
@@ -75,14 +81,23 @@ Once installed, use
 	depgraph -d /path/to/project -f json -l ts -i "tests,node_modules,dist" -r "@:src"
 	```
 
-To save output to a file, say `stats.json`, you can use i/o redirection, that is;
-```sh
-depgraph -d /path/to/project -f json -l go > stats.json
-```
+## Output
 
->Note: In case the output format is `mermaid`, you can use the mermaid vscode
->extension or Obsidian or [mermaid.live](https://mermaid.live) to view the output.
->In case of `jsoncanvas`, you can use Obsidian.
+To save output to a file, you can use I/O redirection, that is;
+
+- **mermaid**: In case the output format is `mermaid`, you can use the mermaid vscode
+  extension or Obsidian or [mermaid.live](https://mermaid.live) to view the output.
+  ```sh
+  depgraph -d /path/to/project -f mermaid -l go > stats.mmd
+  ```
+- **jsoncanvas**: to view the visual output, use one of the apps on this [list](https://jsoncanvas.org/docs/apps/).
+  ```sh
+  depgraph -d /path/to/project -f jsoncanvas -l go > stats.json
+  ```
+- **json**
+  ```sh
+  depgraph -d /path/to/project -f json -l go > stats.json
+  ```
 
 ## How it works
 
