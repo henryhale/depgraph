@@ -22,7 +22,9 @@ jobs:
           go-version: "stable"
 
       - name: build binary
-        run: ./build.sh ci
+        run: |
+          ./build.sh ci
+          echo ${{ github.hash }} > checksum-sha.txt
 
       - name: list binaries
         run: ls depgraph-*
@@ -30,8 +32,11 @@ jobs:
       - name: create release
         uses: softprops/action-gh-release@v2
         with:
+          name: depgraph ${{ github.ref }}
+          generate_release_notes: true
           files: |
             depgraph-*
             install.sh
+            checksum-sha.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,14 @@
+{
+    "name": "depgraph",
+    "version": "0.0.2",
+    "scripts": {
+        "release-patch": "pnpx changelogen@latest --patch --release",
+        "release-minor": "pnpx changelogen@latest --minor --release",
+        "release-major": "pnpx changelogen@latest --major --release"
+    },
+    "author": {
+        "name": "Henry Hale",
+        "url": "https://github.com/henryhale"
+    },
+    "license": "MIT"
+}
