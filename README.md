@@ -14,19 +14,19 @@ This is a cli tool that tends to visualize a codebase right from inter-file
 ~~to in-file~~ dependency so you can understand how it is developed. It is basically
 based on the fact that every programming language has known standard approaches
 to handling modules/packages; imports and exports. Unlike existing dependency
-resolution/visualization tools that are language-specific or parser-centric, 
-depgraph is language agnostic since it uses regular expressions to match import 
+resolution/visualization tools that are language-specific or parser-centric,
+depgraph is language agnostic since it uses regular expressions to match import
 and export statements from which a dependency graph is constructed. While this is
-experimental, it produces amazing results for small vanilla projects. The graph 
-is formatted and output as json, [jsoncanvas](jsoncanvas.org), or [mermaid](mermaid.js.org). 
+experimental, it produces amazing results for small vanilla projects. The graph
+is formatted and output as json, [jsoncanvas](jsoncanvas.org), or [mermaid](mermaid.js.org).
 
 ## Why?
 
 I landed onto a codebase and couldn't figure out what was going on fast;
-have you ever experienced that before? It is overwhelmingly a rewarding process that 
+have you ever experienced that before? It is overwhelmingly a rewarding process that
 takes me many hours trying to figure out lots of stuff in a new codebasee.
-So, I wanted to speed up the process a little bit such that I can easily fix a bug/issue 
-or contribute to any project seamlessly. Additionally, I needed to learn ideas and 
+So, I wanted to speed up the process a little bit such that I can easily fix a bug/issue
+or contribute to any project seamlessly. Additionally, I needed to learn ideas and
 patterns from several amazing opensource projects visually. Big codebases can scare,
 but not anymore, depgraph is here!
 
@@ -44,8 +44,7 @@ but not anymore, depgraph is here!
 
 - Linux/Mac/Termux:
 	```sh
-	curl -L -o install.sh https://github.com/henryhale/depgraph/releases/download/latest/install.sh
-	bash install.sh
+	curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/install.sh | bash
 	```
 - Windows:
 	Go to the [Github releases page](https://github.com/henryhale/depgraph/releases/latest) and download a prebuilt executable for your machine.
@@ -58,7 +57,7 @@ Once installed, use
 
 **Required arguments**
 - `-d <path>` specifies the path to the directory containing source files
-- `-l <language>` sets the programming language: `ts`, `js`, `go`, `c`, `cpp`, `php` 
+- `-l <language>` sets the programming language: `ts`, `js`, `go`, `c`, `cpp`, `php`
 - `-f <format>` specifies the output format of the result: `json`, `jsoncanvas`, `mermaid`
 
 **Optional arguments**
@@ -75,13 +74,13 @@ Once installed, use
 	```sh
 	depgraph -d /path/to/project -f json -l ts -i "tests,node_modules,dist" -r "@:src"
 	```
- 
+
 To save output to a file, say `stats.json`, you can use i/o redirection, that is;
 ```sh
 depgraph -d /path/to/project -f json -l go > stats.json
 ```
 
->Note: In case the output format is `mermaid`, you can use the mermaid vscode 
+>Note: In case the output format is `mermaid`, you can use the mermaid vscode
 >extension or Obsidian or [mermaid.live](https://mermaid.live) to view the output.
 >In case of `jsoncanvas`, you can use Obsidian.
 
@@ -106,7 +105,7 @@ To build this project locally, ensure that you have [Go](https://go.dev/doc/inst
 
 Clone this repository using: `git clone https://github.com/henryhale/depgraph.git`
 
-At the root of the repository, there exists a shell script which when executed yields a binary executable; 
+At the root of the repository, there exists a shell script which when executed yields a binary executable;
 using your shell, run
 
 ```sh
@@ -125,4 +124,3 @@ chmod +x build.sh
 &copy; 2024 [Henry Hale](https://github.com/henryhale).
 
 Release under [MIT License](https://github.com/henryhale/depgraph/blob/master/LICENSE.txt)
-
