@@ -2,9 +2,9 @@
     "name": "depgraph",
     "version": "0.0.2",
     "scripts": {
-        "release-patch": "pnpx changelogen@latest --patch --release",
-        "release-minor": "pnpx changelogen@latest --minor --release",
-        "release-major": "pnpx changelogen@latest --major --release"
+        "release-patch": "pnpx changelogen@latest --patch --release --push",
+        "release-minor": "pnpx changelogen@latest --minor --release --push",
+        "release-major": "pnpx changelogen@latest --major --release --push"
     },
     "author": {
         "name": "Henry Hale",
