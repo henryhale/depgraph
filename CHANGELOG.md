@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.0.4
+
+[compare changes](https://github.com/henryhale/depgraph/compare/v0.0.3...v0.0.4)
+
+### 📖 Documentation
+
+- Update installation command ([8c19964](https://github.com/henryhale/depgraph/commit/8c19964))
+- Update supported languages ([29273dd](https://github.com/henryhale/depgraph/commit/29273dd))
+
+### 🏡 Chore
+
+- Update release name to tagname ([de83c97](https://github.com/henryhale/depgraph/commit/de83c97))
+- **fix:** Update supported languages ([f3d88b6](https://github.com/henryhale/depgraph/commit/f3d88b6))
+
+### ❤️ Contributors
+
+- Henry Hale ([@henryhale](http://github.com/henryhale))
+
 ## v0.0.3
 
 

@@ -1,6 +1,6 @@
 {
     "name": "depgraph",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "scripts": {
         "release-patch": "pnpx changelogen@latest --patch --release --push",
         "release-minor": "pnpx changelogen@latest --minor --release --push",
