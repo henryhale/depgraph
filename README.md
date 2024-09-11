@@ -63,7 +63,7 @@ Once installed, use
 
 **Required arguments**
 - `-d <path>` specifies the path to the directory containing source files
-- `-l <language>` sets the programming language: `ts`, `js`, `go`, `c`, `cpp`, `php`
+- `-l <language>` sets the programming language: `ts`, `js` <!-- , `go`, `c`, `cpp`, `php` -->
 - `-f <format>` specifies the output format of the result: `json`, `jsoncanvas`, `mermaid`
 
 **Optional arguments**

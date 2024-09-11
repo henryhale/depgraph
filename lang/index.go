@@ -16,8 +16,8 @@ type Language struct {
 
 type Rule struct {
 	RegExp string
-	File int
-	Items int
+	File   int
+	Items  int
 	Export bool
 }
 
@@ -46,23 +46,26 @@ func Get(ext string) (Language, bool) {
 	var supported bool = true
 	switch strings.ToLower(ext) {
 
-		// js/ts -> js.go
-		case "js": lang = JavaScript
-		case "ts": lang = JavaScript
+	// js/ts -> js.go
+	case "js":
+		lang = JavaScript
+	case "ts":
+		lang = JavaScript
 
-		// c/c++ -> c.go
-		case "c": lang = CC
-		case "cpp": lang = CC
+	// c/c++ -> c.go
+	// case "c": lang = CC
+	// case "cpp": lang = CC
 
-		// go -> go.go
-		case "go": lang = GO
+	// go -> go.go
+	// case "go": lang = GO
 
-		// php -> php.go
-		case "php": lang = PHP
+	// php -> php.go
+	// case "php": lang = PHP
 
-		// ...
+	// ...
 
-		default: supported = false
+	default:
+		supported = false
 	}
 	return lang, supported
 }

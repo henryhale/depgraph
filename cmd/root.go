@@ -6,20 +6,21 @@ import (
 )
 
 type Options struct {
-	Dir *string
-	Lang *string
+	Dir          *string
+	Lang         *string
 	OutputFormat *string
 	IgnoredPaths []string
 	ReplacePaths map[string]string
-	ShowHelp *bool
-	ShowVersion *bool
+	ShowHelp     *bool
+	ShowVersion  *bool
 }
 
 func InitArgs() Options {
 	options := Options{}
 
 	options.Dir = flag.String("d", "", "Specifies the target `directory` to analyze.\n")
-	options.Lang = flag.String("l", "", "The programming `language` of the files: js, c, cpp, go, php\n")
+	// options.Lang = flag.String("l", "", "The programming `language` of the files: js, c, cpp, go, php\n")
+	options.Lang = flag.String("l", "", "The programming `language` of the files: js, ts\n")
 	options.OutputFormat = flag.String("f", "", "The output `format` of the analysis: json, jsoncanvas, mermaid\n")
 	options.ShowHelp = flag.Bool("h", false, "Show information about the command-line options and exit.\n")
 	options.ShowVersion = flag.Bool("v", false, "Show the current version information and exit.\n")
