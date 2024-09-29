@@ -4,9 +4,7 @@ import (
 	"github.com/henryhale/depgraph/lang"
 )
 
-type AnalysisResultMap map[string]lang.AnalysisResult
-
-func Format(f *string, deps *AnalysisResultMap) string {
+func Format(f *string, deps *lang.DependencyGraph) string {
 	var output string
 	switch *f {
 	case "json":

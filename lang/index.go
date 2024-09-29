@@ -21,18 +21,21 @@ type Rule struct {
 	Export bool
 }
 
-type AnalysisResult struct {
+type DependencyGraph map[string]SourceFile
+
+type SourceFile struct {
 	Imports map[string][]string
 	Exports []string
+	Local bool
 }
 
-func (r *AnalysisResult) AddExport(exports ...string) {
+func (r *SourceFile) AddExport(exports ...string) {
 	for _, export := range exports {
 		r.Exports = append(r.Exports, export)
 	}
 }
 
-func (r *AnalysisResult) AddImport(path string, items []string) {
+func (r *SourceFile) AddImport(path string, items []string) {
 	_, exists := r.Imports[path]
 	if exists {
 		r.Imports[path] = append(r.Imports[path], items...)

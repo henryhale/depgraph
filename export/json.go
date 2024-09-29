@@ -2,16 +2,18 @@ package export
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
+
+	"github.com/henryhale/depgraph/lang"
 )
 
-func JSON(deps *AnalysisResultMap) string {
+func JSON(deps *lang.DependencyGraph) string {
 	graph := GenerateGraphData(deps)
 
 	output, err := json.MarshalIndent(graph, "", "  ")
 
 	if err != nil {
-		fmt.Println("error: failed to marshal output - json")
+		log.Fatal("error: failed to marshal output - json")
 	}
 
 	return string(output)

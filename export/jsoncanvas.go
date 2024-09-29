@@ -2,9 +2,11 @@ package export
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"math"
 	"strconv"
+
+	"github.com/henryhale/depgraph/lang"
 )
 
 type jcNode struct {
@@ -33,7 +35,7 @@ type jcGraph struct {
 	Edges []jcEdge `json:"edges,omitempty"`
 }
 
-func JSONCanvas(deps *AnalysisResultMap) string {
+func JSONCanvas(deps *lang.DependencyGraph) string {
 	graph := GenerateGraphData(deps)
 
 	output := jcGraph{}
@@ -87,13 +89,12 @@ func JSONCanvas(deps *AnalysisResultMap) string {
 		}
 
 		output.Edges = append(output.Edges, jedge)
-		fmt.Println("edges", len(output.Edges))
+		// log.Println("edges", len(output.Edges))
 	}
 
 	outputJSON, err := json.MarshalIndent(output, "", "  ")
 	if err != nil {
-		fmt.Println("error: failed to marshal output - jsoncanvas")
-		return ""
+		log.Fatal("error: failed to marshal output - jsoncanvas")
 	}
 
 	return string(outputJSON)

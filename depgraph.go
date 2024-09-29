@@ -17,59 +17,56 @@ import (
 var version = "(untracked)"
 
 func main() {
-	// parse cli arguments
-	options := cmd.InitArgs()
+	// parse command line flags
+	config := cmd.ParseConfig()
 
 	// help
-	if *options.ShowHelp {
-		fmt.Print("Usage: depgraph [options]\n\n")
+	if *config.ShowHelp {
+		fmt.Print("Usage: " + cmd.Name + " [options]\n\n")
 		fmt.Println("Options:")
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
 
 	// version
-	if *options.ShowVersion {
-		fmt.Println("depgraph version", version)
+	if *config.ShowVersion {
+		fmt.Println(cmd.Name + " version", version)
 		os.Exit(0)
 	}
 
-	// select parser
-	if len(*options.Lang) == 0 {
-		fmt.Println("error: programming language not specified")
-		os.Exit(1)
+	// select language
+	if len(*config.Lang) == 0 {
+		cmd.Fatal("programming language not specified")
 	}
-	pl, found := lang.Get(*options.Lang)
+	pl, found := lang.Get(*config.Lang)
 	if !found {
-		fmt.Println("error: '" + *options.Lang + "' is not yet supported")
-		os.Exit(1)
+		cmd.Fatal("'" + *config.Lang + "' is not yet supported")
 	}
 
 	// read target directory
 	// - filter out ignored file paths
-	files, err := utils.TraverseDirectory(options.Dir, &pl.Extensions, &options.IgnoredPaths)
+	files, err := utils.TraverseDirectory(config.Dir, &pl.Extensions, &config.IgnoredPaths)
 	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
+		cmd.Fatal(err)
 	}
 
 	// build deps map - analyze each file
-	deps := make(export.AnalysisResultMap)
+	deps := make(lang.DependencyGraph)
 	// keep track of external dependencies
 	external := make(map[string][]string)
 
 	for _, path := range *files {
 		file, err := os.ReadFile(path)
 		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
+			cmd.Fatal(err)
 		}
 
 		code := string(file)
 
-		result := lang.AnalysisResult{
+		result := lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: []string{},
+			Local: true,
 		}
 
 		for _, rule := range pl.Rules {
@@ -88,7 +85,7 @@ func main() {
 				// imports
 				if !rule.Export && rule.File > 0 {
 					if rule.Items > 0 {
-						importpath := utils.FullPath(match[rule.File], path, &options.ReplacePaths)
+						importpath := utils.FullPath(match[rule.File], path, &config.ReplacePaths)
 						result.AddImport(importpath, *utils.Explode(match[rule.Items]))
 					} else {
 						// incase of multiple line imports: go
@@ -99,7 +96,7 @@ func main() {
 							if len(p) == 0 {
 								continue
 							}
-							p = utils.FullPath(p, path, &options.ReplacePaths)
+							p = utils.FullPath(p, path, &config.ReplacePaths)
 
 							// use regexp to match "p.xxx" - usage of import
 							if pl.LocateImports {
@@ -134,16 +131,24 @@ func main() {
 
 	// add externals
 	for path, exports := range external {
-		deps[path] = lang.AnalysisResult{
+		deps[path] = lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: exports,
+			Local: false,
 		}
 	}
 
 	// produce formatted output
-	output := export.Format(options.OutputFormat, &deps)
+	output := export.Format(config.OutputFormat, &deps)
 
 	// done!
-	fmt.Println(output)
+	if *config.OutputFile == "stdout" {
+		fmt.Println(output)
+	} else {
+		err := os.WriteFile(*config.OutputFile, []byte(output), 644)
+		if err != nil {
+			cmd.Fatal(err)
+		}
+	}
 
 }

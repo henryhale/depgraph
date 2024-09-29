@@ -3,7 +3,7 @@ package utils
 import (
 	"io/fs"
 	"path/filepath"
-	"slices"
+	"regexp"
 	"strings"
 )
 
@@ -24,12 +24,9 @@ func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]strin
 
 // verify if a file is to be analyzed
 func isValidFile(path *string, extensions *[]string, ignoredPaths *[]string) bool {
-	segments := strings.Split(*path, "/")
 	for _, p := range *ignoredPaths {
-		if p == *path {
-			return false
-		}
-		if len(p) > 0 && slices.Contains(segments, p) {
+		matched, _ := regexp.Match(p, []byte(*path))
+		if matched {
 			return false
 		}
 	}

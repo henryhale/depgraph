@@ -1,5 +1,9 @@
 package export
 
+import (
+	"github.com/henryhale/depgraph/lang"
+)
+
 type Node struct {
 	Id string `json:"id"`
 	Label string `json:"label"`
@@ -18,7 +22,7 @@ type Graph struct {
 	Edges []Edge `json:"edges"`
 }
 
-func GenerateGraphData(deps *AnalysisResultMap) *Graph {
+func GenerateGraphData(deps *lang.DependencyGraph) *Graph {
 	nodes := []Node{}
 	edges := []Edge{}
 

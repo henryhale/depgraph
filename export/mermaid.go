@@ -2,9 +2,11 @@ package export
 
 import (
 	"strings"
+
+	"github.com/henryhale/depgraph/lang"
 )
 
-func Mermaid(deps *AnalysisResultMap) string {
+func Mermaid(deps *lang.DependencyGraph) string {
 	indent1 := "  "
 	indent2 := indent1 + indent1
 	nl := "\n"
