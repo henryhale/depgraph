@@ -20,7 +20,7 @@ func ParseConfig() Config {
 	config := Config{}
 
 	config.Dir = flag.String("d", ".", "Specifies the target `directory` to analyze (default: current working directory).\n")
-	config.Lang = flag.String("l", "", "The programming `language` of the files: js, ts\n")
+	config.Lang = flag.String("l", "", "The programming `language` of the files: js, ts, c, cpp\n")
 	config.OutputFormat = flag.String("f", "json", "The output `format` of the analysis: json (default), jsoncanvas, mermaid\n")
 	config.OutputFile = flag.String("o", "stdout", "Write output to the selected `file` (default: stdout)\n")
 	config.ShowHelp = flag.Bool("h", false, "Show information about the command-line options and exit.\n")
