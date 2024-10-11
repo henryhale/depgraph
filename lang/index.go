@@ -67,8 +67,8 @@ func Get(ext string) (lang Language, supported bool) {
 		lang = JavaScript
 
 	// c/c++ -> c.go
-	// case "c": lang = CC
-	// case "cpp": lang = CC
+	case "c": lang = CC
+	case "cpp": lang = CC
 
 	// go -> go.go
 	// case "go": lang = GO
