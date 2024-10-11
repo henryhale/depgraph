@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -28,7 +27,6 @@ func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]strin
 			}
 			files = append(files, File{path, string(code)})
 		}
-		fmt.Println("", path)
 		return nil
 	})
 	return &files, err
@@ -37,6 +35,9 @@ func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]strin
 // verify if a file is to be analyzed
 func isValidFile(path *string, extensions *[]string, ignoredPaths *[]string) bool {
 	for _, p := range *ignoredPaths {
+		if len(p) == 0 {
+			continue
+		}
 		matched, _ := regexp.Match(p, []byte(*path))
 		if matched {
 			return false
@@ -48,7 +49,6 @@ func isValidFile(path *string, extensions *[]string, ignoredPaths *[]string) boo
 			return true
 		}
 	}
-
 	return false
 }
 

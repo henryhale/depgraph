@@ -57,7 +57,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(*files)
 
 	// build deps map - analyze each file
 	deps := make(lang.DependencyGraph)
