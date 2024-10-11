@@ -47,7 +47,12 @@ func main() {
 	}
 	pl, found := lang.Get(*config.Lang)
 	if !found {
-		log.Fatal("'" + *config.Lang + "' is not yet supported")
+		log.Fatal("'" + *config.Lang + "' language is not yet supported")
+	}
+
+	// check output format
+	if !export.FormatSupported(config.OutputFormat) {
+		log.Fatal("'" + *config.OutputFormat + "' output format is not supported")
 	}
 
 	// read target directory
