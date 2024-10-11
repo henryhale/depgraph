@@ -2,12 +2,8 @@ package cmd
 
 import (
 	"flag"
-	"fmt"
-	"os"
 	"strings"
 )
-
-const Name string = "depgraph"
 
 type Config struct {
 	Dir          *string
@@ -23,15 +19,14 @@ type Config struct {
 func ParseConfig() Config {
 	config := Config{}
 
-	config.Dir = flag.String("d", "", "Specifies the target `directory` to analyze.\n")
-	// config.Lang = flag.String("l", "", "The programming `language` of the files: js, c, cpp, go, php\n")
+	config.Dir = flag.String("d", ".", "Specifies the target `directory` to analyze (default: current working directory).\n")
 	config.Lang = flag.String("l", "", "The programming `language` of the files: js, ts\n")
-	config.OutputFormat = flag.String("f", "", "The output `format` of the analysis: json, jsoncanvas, mermaid\n")
+	config.OutputFormat = flag.String("f", "json", "The output `format` of the analysis: json (default), jsoncanvas, mermaid\n")
 	config.OutputFile = flag.String("o", "stdout", "Write output to the selected `file` (default: stdout)\n")
 	config.ShowHelp = flag.Bool("h", false, "Show information about the command-line options and exit.\n")
 	config.ShowVersion = flag.Bool("v", false, "Show the current version information and exit.\n")
-	ignoredPaths := flag.String("i", "", "A comma-separated list of `directories` to ignore.\n")
-	replacePaths := flag.String("r", "", "A key:value  comma-separated list of `paths` to replace.\n")
+	ignoredPaths := flag.String("i", "", "A comma-separated list of `directories` to ignore for example: 'tests,dist,build'\n")
+	replacePaths := flag.String("r", "", "A key:value  comma-separated list of `paths` to replace for example: '@:src,demo:src/demo'\n")
 
 	flag.Parse()
 
@@ -47,9 +42,4 @@ func ParseConfig() Config {
 	}
 
 	return config
-}
-
-func Fatal(err any) {
-	fmt.Println(Name + ":", err)
-	os.Exit(1)
 }

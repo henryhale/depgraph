@@ -1,3 +1,11 @@
 import { box } from "house"
-
-export const ax = 1 * box
+import { 
+	boxes,
+	pens
+} from "house"
+// import { book } from "house"
+export const axxx = 1 * box * boxes * pens
+/* 
+	export const ax2 = 123
+*/
+export const ax = 1 * box * boxes * pens

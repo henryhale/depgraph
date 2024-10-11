@@ -1,5 +1,9 @@
 package lang
 
+import (
+	"github.com/henryhale/depgraph/util"
+)
+
 // JavaScript
 var JavaScript = Language{
 	Extensions: []string{".js", ".mjs", ".cjs", ".ts", ".mts", ".cts"},
@@ -31,5 +35,25 @@ var JavaScript = Language{
 		Rule{`exports\.(\w+)\s*=\s*.+;?`, -1, 1, true},
 		// importTSType
 		Rule{`import\s+type\s+\{([^}]*)\}\s+from\s*['"](.*)['"];?`, 2, 1, false},
+	},
+	Comments: &util.Comments,
+	Extract: func(options *ExtractorOptions) {
+		rule := options.Rule
+		match := *options.Match
+		result := options.Result
+		file := *options.File
+		replacers := options.Replacers
+
+		// exports
+		if rule.Export && rule.Items > 0 {
+			result.AddExport(*util.Explode(match[rule.Items])...)
+			return
+		}
+
+		// imports
+		if !rule.Export && rule.Items > 0 && rule.File > 0 {
+			importpath := util.FullPath(match[rule.File], file, replacers)
+			result.AddImport(importpath, *util.Explode(match[rule.Items]))
+		}
 	},
 }

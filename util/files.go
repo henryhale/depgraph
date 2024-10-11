@@ -1,22 +1,34 @@
-package utils
+package util
 
 import (
+	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 )
 
+type File struct {
+	Path string
+	Code string
+}
+
 // recursively list of all files in a directory
-func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]string) (*[]string, error) {
-	var files []string
+func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]string) (*[]File, error) {
+	var files []File
 	err := filepath.WalkDir(*root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if !d.IsDir() && isValidFile(&path, extensions, ignoredPaths) {
-			files = append(files, path)
+			code, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			files = append(files, File{path, string(code)})
 		}
+		fmt.Println("", path)
 		return nil
 	})
 	return &files, err

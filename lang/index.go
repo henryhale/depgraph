@@ -4,25 +4,6 @@ import (
 	"strings"
 )
 
-type Language struct {
-	// valid extensions
-	Extensions []string
-	// import and export statement rules
-	Rules []Rule
-	// for languages using the import statements but
-	// don't specify actual imports like go, dart, py
-	LocateImports bool
-}
-
-type Rule struct {
-	RegExp string
-	File   int
-	Items  int
-	Export bool
-}
-
-type DependencyGraph map[string]SourceFile
-
 type SourceFile struct {
 	Imports map[string][]string
 	Exports []string
@@ -44,9 +25,39 @@ func (r *SourceFile) AddImport(path string, items []string) {
 	}
 }
 
-func Get(ext string) (Language, bool) {
-	var lang Language
-	var supported bool = true
+type DependencyGraph map[string]SourceFile
+
+type Rule struct {
+	RegExp string
+	File   int
+	Items  int
+	Export bool
+}
+
+type ExtractorOptions struct {
+	Rule *Rule
+	Match *[]string
+	Result *SourceFile
+	File *string
+	Replacers *map[string]string
+}
+
+type Language struct {
+	// valid extensions
+	Extensions []string
+	// import and export statement rules
+	Rules []Rule
+	// comments
+	Comments *[]string
+	// for languages using the import statements but
+	// don't specify actual imports like go, dart, py
+	LocateImports bool
+	// imports and exports extractor
+	Extract func(*ExtractorOptions)
+}
+
+func Get(ext string) (lang Language, supported bool) {
+	supported = true
 	switch strings.ToLower(ext) {
 
 	// js/ts -> js.go
@@ -70,5 +81,5 @@ func Get(ext string) (Language, bool) {
 	default:
 		supported = false
 	}
-	return lang, supported
+	return
 }
