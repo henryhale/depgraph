@@ -1,12 +1,19 @@
 package lang
 
 import (
+	"path/filepath"
+	"slices"
 	"github.com/henryhale/depgraph/util"
 )
 
+
 // JavaScript
+
+// extensions
+var exts = []string{".js", ".mjs", ".cjs", ".ts", ".mts", ".cts"}
+
 var JavaScript = Language{
-	Extensions: []string{".js", ".mjs", ".cjs", ".ts", ".mts", ".cts"},
+	Extensions: exts,
 	LocateImports: false,
 	Rules: []Rule{
 		// importESNamed
@@ -53,7 +60,32 @@ var JavaScript = Language{
 		// imports
 		if !rule.Export && rule.Items > 0 && rule.File > 0 {
 			importpath := util.FullPath(match[rule.File], file, replacers)
+			importpath = findJsFile(importpath)
 			result.AddImport(importpath, *util.Explode(match[rule.Items]))
 		}
 	},
+}
+
+/*
+in case of 'demo/app' check for: 
+- 'demo/app.{js,ts,mjs,cjs}'
+- 'demo/app/index.{js,ts,mjs,cjs}'
+*/
+func findJsFile(path string) string {
+	ext := filepath.Ext(path)
+	if len(ext) > 0 && slices.Contains(exts, ext) {
+		return path
+	}
+	
+	for _, ext := range exts {
+		if util.FileExists(path + ext) {
+			return path+ext
+		}
+		index := filepath.Join(path, "index"+ext)
+		if util.FileExists(index) {
+			return index
+		}
+	}
+
+	return path
 }
