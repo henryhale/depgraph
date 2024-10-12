@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+echo "depgraph: installing executable..."
+
 # detect os and architecture
 echo "detecting system architecture..."
 
