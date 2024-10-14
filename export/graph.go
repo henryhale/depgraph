@@ -1,15 +1,19 @@
 package export
 
+import (
+	"github.com/henryhale/depgraph/lang"
+)
+
 type Node struct {
-	Id string `json:"id"`
-	Label string `json:"label"`
+	ID     string `json:"id"`
+	Label  string `json:"label"`
 	Parent string `json:"parent"`
-	Type string `json:"type"`
+	Type   string `json:"type"`
 }
 
 type Edge struct {
-	From string `json:"from"`
-	To string `json:"to"`
+	From  string `json:"from"`
+	To    string `json:"to"`
 	Label string `json:"label"`
 }
 
@@ -18,7 +22,7 @@ type Graph struct {
 	Edges []Edge `json:"edges"`
 }
 
-func GenerateGraphData(deps *AnalysisResultMap) *Graph {
+func GenerateGraphData(deps *lang.DependencyGraph) *Graph {
 	nodes := []Node{}
 	edges := []Edge{}
 
@@ -36,10 +40,10 @@ func GenerateGraphData(deps *AnalysisResultMap) *Graph {
 
 		// add file node
 		nodes = append(nodes, Node{
-			Id: file,
-			Label: file,
+			ID:     file,
+			Label:  file,
 			Parent: "",
-			Type: "group",
+			Type:   "group",
 		})
 
 		// add exports as child nodes to file
@@ -51,10 +55,10 @@ func GenerateGraphData(deps *AnalysisResultMap) *Graph {
 			ids[id] = struct{}{}
 
 			nodes = append(nodes, Node{
-				Id: id,
-				Label: export,
+				ID:     id,
+				Label:  export,
 				Parent: file,
-				Type: "text",
+				Type:   "text",
 			})
 		}
 
@@ -68,8 +72,8 @@ func GenerateGraphData(deps *AnalysisResultMap) *Graph {
 				ids[id] = struct{}{}
 
 				edges = append(edges, Edge{
-					From: file,
-					To: importedFile,
+					From:  file,
+					To:    importedFile,
 					Label: "imports " + item,
 				})
 			}

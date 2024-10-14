@@ -2,11 +2,19 @@ package export
 
 import (
 	"github.com/henryhale/depgraph/lang"
+	"slices"
 )
 
-type AnalysisResultMap map[string]lang.AnalysisResult
+func FormatSupported(f *string) bool {
+	formats := []string{
+		"json",
+		"mermaid",
+		"jsoncanvas",
+	}
+	return slices.Contains(formats, *f)
+}
 
-func Format(f *string, deps *AnalysisResultMap) string {
+func Format(f *string, deps *lang.DependencyGraph) string {
 	var output string
 	switch *f {
 	case "json":

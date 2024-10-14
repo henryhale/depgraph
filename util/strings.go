@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"regexp"
@@ -8,7 +8,7 @@ import (
 // split a string into segments
 func Explode(value string) *[]string {
 	value = strings.TrimSpace(value)
-	badChars := []string{" ","\t","\n","\r","\""}
+	badChars := []string{" ", "\t", "\n", "\r", "\""}
 	for _, char := range badChars {
 		value = strings.ReplaceAll(value, char, "")
 	}

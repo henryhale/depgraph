@@ -23,5 +23,6 @@ go.work.sum
 
 # build output
 depgraph
+depgraph-*
 
-checksum-sha.txt
+checksum.sha.txt

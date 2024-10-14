@@ -3,121 +3,108 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"regexp"
-	"strings"
 
 	"github.com/henryhale/depgraph/cmd"
 	"github.com/henryhale/depgraph/export"
 	"github.com/henryhale/depgraph/lang"
-	"github.com/henryhale/depgraph/utils"
+	"github.com/henryhale/depgraph/util"
 )
 
-// version of depgraph
+// command name
+const Name string = "depgraph"
+
+// version number
 var version = "(untracked)"
 
 func main() {
-	// parse cli arguments
-	options := cmd.InitArgs()
+	// setup a logger
+	log.SetPrefix(Name + ": ")
+	log.SetFlags(0)
+
+	// parse command line flags
+	config := cmd.ParseConfig()
 
 	// help
-	if *options.ShowHelp {
-		fmt.Print("Usage: depgraph [options]\n\n")
+	if *config.ShowHelp {
+		fmt.Print("Usage:", Name, "[options]\n\n")
 		fmt.Println("Options:")
 		flag.PrintDefaults()
 		os.Exit(0)
 	}
 
 	// version
-	if *options.ShowVersion {
-		fmt.Println("depgraph version", version)
+	if *config.ShowVersion {
+		fmt.Println(Name, "version", version)
 		os.Exit(0)
 	}
 
-	// select parser
-	if len(*options.Lang) == 0 {
-		fmt.Println("error: programming language not specified")
-		os.Exit(1)
+	// select language
+	if len(*config.Lang) == 0 {
+		log.Fatal("programming language not specified")
 	}
-	pl, found := lang.Get(*options.Lang)
+	pl, found := lang.Get(*config.Lang)
 	if !found {
-		fmt.Println("error: '" + *options.Lang + "' is not yet supported")
-		os.Exit(1)
+		log.Fatal("'" + *config.Lang + "' language is not yet supported")
+	}
+
+	// check output format
+	if !export.FormatSupported(config.OutputFormat) {
+		log.Fatal("'" + *config.OutputFormat + "' output format is not supported")
 	}
 
 	// read target directory
 	// - filter out ignored file paths
-	files, err := utils.TraverseDirectory(options.Dir, &pl.Extensions, &options.IgnoredPaths)
+	// - verify file extensions
+	files, err := util.TraverseDirectory(config.Dir, &pl.Extensions, &config.IgnoredPaths)
 	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	// build deps map - analyze each file
-	deps := make(export.AnalysisResultMap)
+	deps := make(lang.DependencyGraph)
 	// keep track of external dependencies
 	external := make(map[string][]string)
 
-	for _, path := range *files {
-		file, err := os.ReadFile(path)
-		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
-		}
+	extractorOptions := new(lang.ExtractorOptions)
+	extractorOptions.Replacers = &config.ReplacePaths
 
-		code := string(file)
-
-		result := lang.AnalysisResult{
+	for _, file := range *files {
+		result := lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: []string{},
+			Local:   true,
 		}
+
+		extractorOptions.Result = &result
+		extractorOptions.File = &file.Path
+
+		file.Code = util.Preprocess(file.Code, pl.Comments)
 
 		for _, rule := range pl.Rules {
 			re := regexp.MustCompile(rule.RegExp)
-			matches := re.FindAllStringSubmatch(code, -1)
+			matches := re.FindAllStringSubmatch(file.Code, -1)
 			if matches == nil {
 				continue
 			}
 
-			for _, match := range matches {
-				// exports
-				if rule.Export && rule.Items > 0 {
-					result.AddExport(*utils.Explode(match[rule.Items])...)
-					continue
-				}
-				// imports
-				if !rule.Export && rule.File > 0 {
-					if rule.Items > 0 {
-						importpath := utils.FullPath(match[rule.File], path, &options.ReplacePaths)
-						result.AddImport(importpath, *utils.Explode(match[rule.Items]))
-					} else {
-						// incase of multiple line imports: go
-						// incase of non-specific imported items: go, python, dart
-						paths := strings.ReplaceAll(match[rule.File], "\n", ",")
-						segments := utils.Explode(paths)
-						for _, p := range *segments {
-							if len(p) == 0 {
-								continue
-							}
-							p = utils.FullPath(p, path, &options.ReplacePaths)
+			extractorOptions.Rule = &rule
 
-							// use regexp to match "p.xxx" - usage of import
-							if pl.LocateImports {
-								usedImports := utils.LocateImports(&p, &code)
-								result.AddImport(p, usedImports)
-							}
-						}
-					}
-				}
+			for _, match := range matches {
+				extractorOptions.Match = &match
+
+				pl.Extract(extractorOptions)
 			}
 		}
 
-		deps[path] = result
+		deps[file.Path] = result
 
 		// ensure all imports exist or atleast external
-		_, isExternal := external[path]
+		_, isExternal := external[file.Path]
 		if isExternal {
-			delete(external, path)
+			delete(external, file.Path)
 		}
 		for importpath, items := range result.Imports {
 			_, exists := deps[importpath]
@@ -134,16 +121,24 @@ func main() {
 
 	// add externals
 	for path, exports := range external {
-		deps[path] = lang.AnalysisResult{
+		deps[path] = lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: exports,
+			Local:   false,
 		}
 	}
 
 	// produce formatted output
-	output := export.Format(options.OutputFormat, &deps)
+	output := export.Format(config.OutputFormat, &deps)
 
 	// done!
-	fmt.Println(output)
+	if *config.OutputFile == "stdout" {
+		fmt.Println(output)
+	} else {
+		err := os.WriteFile(*config.OutputFile, []byte(output), 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 }

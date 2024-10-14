@@ -1,10 +1,13 @@
 package export
 
 import (
+	"regexp"
 	"strings"
+
+	"github.com/henryhale/depgraph/lang"
 )
 
-func Mermaid(deps *AnalysisResultMap) string {
+func Mermaid(deps *lang.DependencyGraph) string {
 	indent1 := "  "
 	indent2 := indent1 + indent1
 	nl := "\n"
@@ -20,26 +23,25 @@ func Mermaid(deps *AnalysisResultMap) string {
 	}
 
 	for file, analysis := range *deps {
-		fileId := strings.ReplaceAll(file, "/", "_")
-		fileId = strings.ReplaceAll(file, "@", "_")
+		fileID := cleanNodeID(file)
 
-		if idExists(fileId) {
+		if idExists(fileID) {
 			continue
 		}
-		ids[fileId] = struct{}{}
+		ids[fileID] = struct{}{}
 
-		subgraph := indent1 + "subgraph " + fileId + nl
+		subgraph := indent1 + "subgraph " + fileID + nl
 
 		// exports as nodes in subgraph
 		for _, export := range analysis.Exports {
-			id := fileId + "_" + export
+			id := fileID + "_" + cleanNodeID(export)
 
-			if idExists(id) {
+			if idExists(file + id) {
 				continue
 			}
-			ids[id] = struct{}{}
+			ids[file+id] = struct{}{}
 
-			text := "[" + export + "]"
+			text := `["` + cleanLabel(export) + `"]`
 			subgraph += indent2 + id + text + nl
 		}
 
@@ -49,23 +51,32 @@ func Mermaid(deps *AnalysisResultMap) string {
 
 		// resolve edges
 		for importedFile, items := range analysis.Imports {
-			iFileId := strings.ReplaceAll(importedFile, "/", "_")
-			iFileId = strings.ReplaceAll(importedFile, "@", "_")
+			iFileID := cleanNodeID(importedFile)
 			for _, item := range items {
-				itemnode := iFileId
+				itemnode := iFileID
 				if !strings.Contains(item, "*") {
 					itemnode += "_" + item
 				}
 
-				if idExists("edge" + itemnode) {
+				if idExists("$$edge$$" + file + itemnode) {
 					continue
 				}
-				ids["edge" + itemnode] = struct{}{}
+				ids["$$edge$$"+file+itemnode] = struct{}{}
 
-				edges += indent1 + fileId + "-->|uses|" + itemnode + nl
+				edges += indent1 + fileID + "-->|uses|" + itemnode + nl
 			}
 		}
 	}
 
 	return graph + edges
+}
+
+func cleanNodeID(s string) string {
+	re := regexp.MustCompile(`[^a-zA-Z0-9\/\._]`)
+	return re.ReplaceAllString(s, "_")
+}
+
+func cleanLabel(s string) string {
+	t := strings.ReplaceAll(s, "*", "#42;")
+	return t
 }

@@ -40,9 +40,9 @@ but not anymore, depgraph is here!
 - [x] export dependency graphs as formatted text (json, [jsoncanvas](jsoncanvas.org), [mermaid](mermaid.js.org))
 - multi-language support - _**work in progress**_
   - [x] js, ts - _almost done_
+  - [x] c, cpp - _in progress_
   - [ ] go
   - [ ] python
-  - [ ] c, cpp
   - [ ] php
   - [ ] ....
 - [ ] interactive web interface (maybe d3.js or cyptoscape.js)
@@ -52,25 +52,26 @@ but not anymore, depgraph is here!
 
 ## Installation
 
-- Linux/Mac/Termux:
+- Using a shell script: Linux/Mac/Termux/WSL
 	```sh
-	curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/install.sh | bash
+	curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/scripts/install.sh | bash
 	```
-- Windows:
-	Go to the [Github releases page](https://github.com/henryhale/depgraph/releases/latest) and download a prebuilt executable for your machine.
+- Prebuilt Executables
+	Go to the [Github releases page](https://github.com/henryhale/depgraph/releases/latest) and download a prebuilt executable for your platform/machine.
 
 ## Usage
 
 Once installed, use
-- `depgraph -v` to show version information
 - `depgraph -h` to display help message
+- `depgraph -v` to show version information
 
 **Required arguments**
-- `-d <path>` specifies the path to the directory containing source files
-- `-l <language>` sets the programming language: `ts`, `js` <!-- , `go`, `c`, `cpp`, `php` -->
-- `-f <format>` specifies the output format of the result: `json`, `jsoncanvas`, `mermaid`
+- `-l <language>` sets the programming language: `ts`, `js`, `c`, `cpp` <!-- `go`, `php` -->
 
 **Optional arguments**
+- `-d <path>` specifies the path to the directory containing source files (_default: current working directory_)
+- `-f <format>` specifies the output format of the result: `json` - _default_, `jsoncanvas`, `mermaid`
+- `-o <path>` write output to the selected `file` (_default: `stdout`_)
 - `-i [path1,path2, ...]` defines a list of comma-separated paths to ignore; for example `-i "tests,dist,build,node_modules"`
 - `-r [old:new, ...]` defines a list of comma-separated key:value paths to replace; for example `-r "@:src"`
 
@@ -87,21 +88,24 @@ Once installed, use
 
 ## Output
 
-To save output to a file, you can use I/O redirection, that is;
+By default, the output is written to `stdout`.
+To save output to a file, you can use;
+
+- `-o <path>` option
+  ```sh
+  depgraph -d /path/to/project -l js -f json -o graph.json  
+  ```
+- I/O redirection
+  ```sh
+  depgraph -d /path/to/project -l js -f json > graph.json  
+  ```
+
+### Output Formats
 
 - **mermaid**: In case the output format is `mermaid`, you can use the mermaid vscode
   extension or Obsidian or [mermaid.live](https://mermaid.live) to view the output.
-  ```sh
-  depgraph -d /path/to/project -f mermaid -l go > stats.mmd
-  ```
-- **jsoncanvas**: to view the visual output, use one of the apps on this [list](https://jsoncanvas.org/docs/apps/).
-  ```sh
-  depgraph -d /path/to/project -f jsoncanvas -l go > stats.json
-  ```
-- **json**
-  ```sh
-  depgraph -d /path/to/project -f json -l go > stats.json
-  ```
+- **jsoncanvas**: To view the visual output from `jsoncanvas` output, use one of the apps on this [list](https://jsoncanvas.org/docs/apps/).
+- **json**: This option is meant from storage and usage with json viewer tools. While the search for a compatible and appropriate visualization tool for json output continues, this option may be _removed_ in future releases.
 
 ## How it works
 
@@ -112,7 +116,7 @@ This section describes how depgraph works when you run the command;
 3. Resolving dependencies: use regular expression to match imports and exports
 4. Building a dependency graph: transform files into nodes and edges from imports
 5. Formating the output: produce a stringified representation of the graph - json, jsoncanvas, mermaid
-6. Printing the results: output the result to standard output
+6. Printing the results: output the result to standard output or file
 
 ## Contributing
 
@@ -120,7 +124,7 @@ Thank you for looking into this amazing project. Incase of any issues, bugs, or 
 
 ## Building
 
-To build this project locally, ensure that you have [Go](https://go.dev/doc/install) installed.
+To build this project locally, ensure that you have [Go v1.23.2](https://go.dev/doc/install) installed.
 
 Clone this repository using: `git clone https://github.com/henryhale/depgraph.git`
 
@@ -128,18 +132,18 @@ At the root of the repository, there exists a shell script which when executed y
 using your shell, run
 
 ```sh
-bash build.sh
+bash scripts/build.sh
 ```
 
 or
 
 ```sh
-chmod +x build.sh
-./build.sh
+chmod +x scripts/build.sh
+./scripts/build.sh
 ```
 
 # License
 
-&copy; 2024 [Henry Hale](https://github.com/henryhale).
+&copy; 2024-present [Henry Hale](https://github.com/henryhale).
 
 Release under [MIT License](https://github.com/henryhale/depgraph/blob/master/LICENSE.txt)

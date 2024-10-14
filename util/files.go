@@ -1,21 +1,31 @@
-package utils
+package util
 
 import (
 	"io/fs"
+	"os"
 	"path/filepath"
-	"slices"
+	"regexp"
 	"strings"
 )
 
+type File struct {
+	Path string
+	Code string
+}
+
 // recursively list of all files in a directory
-func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]string) (*[]string, error) {
-	var files []string
+func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]string) (*[]File, error) {
+	var files []File
 	err := filepath.WalkDir(*root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if !d.IsDir() && isValidFile(&path, extensions, ignoredPaths) {
-			files = append(files, path)
+			code, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			files = append(files, File{path, string(code)})
 		}
 		return nil
 	})
@@ -24,12 +34,12 @@ func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]strin
 
 // verify if a file is to be analyzed
 func isValidFile(path *string, extensions *[]string, ignoredPaths *[]string) bool {
-	segments := strings.Split(*path, "/")
 	for _, p := range *ignoredPaths {
-		if p == *path {
-			return false
+		if len(p) == 0 {
+			continue
 		}
-		if len(p) > 0 && slices.Contains(segments, p) {
+		matched, _ := regexp.Match(p, []byte(*path))
+		if matched {
 			return false
 		}
 	}
@@ -39,7 +49,6 @@ func isValidFile(path *string, extensions *[]string, ignoredPaths *[]string) boo
 			return true
 		}
 	}
-
 	return false
 }
 
@@ -55,4 +64,10 @@ func FullPath(file string, base string, replacers *map[string]string) string {
 		}
 	}
 	return file
+}
+
+// check whether a file exists
+func FileExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
 }
