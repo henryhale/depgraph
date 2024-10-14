@@ -25,4 +25,4 @@ go.work.sum
 depgraph
 depgraph-*
 
-checksum-sha.txt
+checksum.sha.txt
