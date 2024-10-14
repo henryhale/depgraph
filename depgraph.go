@@ -29,7 +29,7 @@ func main() {
 
 	// help
 	if *config.ShowHelp {
-		fmt.Print("Usage:", Name,"[options]\n\n")
+		fmt.Print("Usage:", Name, "[options]\n\n")
 		fmt.Println("Options:")
 		flag.PrintDefaults()
 		os.Exit(0)
@@ -75,14 +75,14 @@ func main() {
 		result := lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: []string{},
-			Local: true,
+			Local:   true,
 		}
 
 		extractorOptions.Result = &result
 		extractorOptions.File = &file.Path
-		
+
 		file.Code = util.Preprocess(file.Code, pl.Comments)
-		
+
 		for _, rule := range pl.Rules {
 			re := regexp.MustCompile(rule.RegExp)
 			matches := re.FindAllStringSubmatch(file.Code, -1)
@@ -124,7 +124,7 @@ func main() {
 		deps[path] = lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: exports,
-			Local: false,
+			Local:   false,
 		}
 	}
 
@@ -135,7 +135,7 @@ func main() {
 	if *config.OutputFile == "stdout" {
 		fmt.Println(output)
 	} else {
-		err := os.WriteFile(*config.OutputFile, []byte(output), 644)
+		err := os.WriteFile(*config.OutputFile, []byte(output), 0644)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -1,8 +1,8 @@
 package export
 
 import (
-	"slices"
 	"github.com/henryhale/depgraph/lang"
+	"slices"
 )
 
 func FormatSupported(f *string) bool {

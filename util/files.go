@@ -69,5 +69,5 @@ func FullPath(file string, base string, replacers *map[string]string) string {
 // check whether a file exists
 func FileExists(path string) bool {
 	_, err := os.Stat(path)
-	return !os.IsNotExist(err)	
+	return !os.IsNotExist(err)
 }

@@ -7,13 +7,11 @@ import (
 type SourceFile struct {
 	Imports map[string][]string
 	Exports []string
-	Local bool
+	Local   bool
 }
 
 func (r *SourceFile) AddExport(exports ...string) {
-	for _, export := range exports {
-		r.Exports = append(r.Exports, export)
-	}
+	r.Exports = append(r.Exports, exports...)
 }
 
 func (r *SourceFile) AddImport(path string, items []string) {
@@ -35,10 +33,10 @@ type Rule struct {
 }
 
 type ExtractorOptions struct {
-	Rule *Rule
-	Match *[]string
-	Result *SourceFile
-	File *string
+	Rule      *Rule
+	Match     *[]string
+	Result    *SourceFile
+	File      *string
 	Replacers *map[string]string
 }
 
@@ -67,8 +65,10 @@ func Get(ext string) (lang Language, supported bool) {
 		lang = JavaScript
 
 	// c/c++ -> c.go
-	case "c": lang = CC
-	case "cpp": lang = CC
+	case "c":
+		lang = CC
+	case "cpp":
+		lang = CC
 
 	// go -> go.go
 	// case "go": lang = GO

@@ -1,25 +1,25 @@
 package lang
 
 import (
-	"regexp"
 	"github.com/henryhale/depgraph/util"
+	"regexp"
 )
 
 // C/C++
 var CC = Language{
-	Extensions: []string{".c", ".h", ".cpp", ".hpp", ".cc", ".cxx"},
+	Extensions:    []string{".c", ".h", ".cpp", ".hpp", ".cc", ".cxx"},
 	LocateImports: false,
 	Rules: []Rule{
 		// standard include
-		Rule{`#include\s*<([^>]+)>`, 1, -1, false},
+		{`#include\s*<([^>]+)>`, 1, -1, false},
 		// user-defined include
-		Rule{`#include\s*"([^"]+)"`, 1, -1, false},
+		{`#include\s*"([^"]+)"`, 1, -1, false},
 		// function declaration
-		Rule{`\n\s*[\w\s\*]+\s+(\w+)\s*\([^)]*\)\s*;`, -1, 1, true},
+		{`\n\s*[\w\s\*]+\s+(\w+)\s*\([^)]*\)\s*;`, -1, 1, true},
 		// variable declaration
-		Rule{`\n\s*extern\s+[\w\s\*]+\s+(\w+)\s*;`, -1, 1, true},
+		{`\n\s*extern\s+[\w\s\*]+\s+(\w+)\s*;`, -1, 1, true},
 		// function definition
-		Rule{`\n\s*[\w\s\*]+\s+(\w+)\s*\([^)]*\)\s*\{[^}]*\}`, -1, 1, true},
+		{`\n\s*[\w\s\*]+\s+(\w+)\s*\([^)]*\)\s*\{[^}]*\}`, -1, 1, true},
 	},
 	Comments: &util.Comments,
 	Extract: func(options *ExtractorOptions) {

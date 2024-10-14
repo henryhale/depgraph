@@ -23,23 +23,23 @@ func Mermaid(deps *lang.DependencyGraph) string {
 	}
 
 	for file, analysis := range *deps {
-		fileId := cleanNodeId(file)
+		fileID := cleanNodeID(file)
 
-		if idExists(fileId) {
+		if idExists(fileID) {
 			continue
 		}
-		ids[fileId] = struct{}{}
+		ids[fileID] = struct{}{}
 
-		subgraph := indent1 + "subgraph " + fileId + nl
+		subgraph := indent1 + "subgraph " + fileID + nl
 
 		// exports as nodes in subgraph
 		for _, export := range analysis.Exports {
-			id := fileId + "_" + cleanNodeId(export)
+			id := fileID + "_" + cleanNodeID(export)
 
 			if idExists(file + id) {
 				continue
 			}
-			ids[file + id] = struct{}{}
+			ids[file+id] = struct{}{}
 
 			text := `["` + cleanLabel(export) + `"]`
 			subgraph += indent2 + id + text + nl
@@ -51,9 +51,9 @@ func Mermaid(deps *lang.DependencyGraph) string {
 
 		// resolve edges
 		for importedFile, items := range analysis.Imports {
-			iFileId := cleanNodeId(importedFile)
+			iFileID := cleanNodeID(importedFile)
 			for _, item := range items {
-				itemnode := iFileId
+				itemnode := iFileID
 				if !strings.Contains(item, "*") {
 					itemnode += "_" + item
 				}
@@ -61,9 +61,9 @@ func Mermaid(deps *lang.DependencyGraph) string {
 				if idExists("$$edge$$" + file + itemnode) {
 					continue
 				}
-				ids["$$edge$$" + file + itemnode] = struct{}{}
+				ids["$$edge$$"+file+itemnode] = struct{}{}
 
-				edges += indent1 + fileId + "-->|uses|" + itemnode + nl
+				edges += indent1 + fileID + "-->|uses|" + itemnode + nl
 			}
 		}
 	}
@@ -71,7 +71,7 @@ func Mermaid(deps *lang.DependencyGraph) string {
 	return graph + edges
 }
 
-func cleanNodeId(s string) string {
+func cleanNodeID(s string) string {
 	re := regexp.MustCompile(`[^a-zA-Z0-9\/\._]`)
 	return re.ReplaceAllString(s, "_")
 }
