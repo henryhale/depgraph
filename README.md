@@ -70,7 +70,7 @@ Once installed, use
 
 **Optional arguments**
 - `-d <path>` specifies the path to the directory containing source files (_default: current working directory_)
-- `-f <format>` specifies the output format of the result: `json` - _default_, `jsoncanvas`, `mermaid`
+- `-f <format>` specifies the output format of the result: `mermaid` - _default_, `jsoncanvas`, `json`
 - `-o <path>` write output to the selected `file` (_default: `stdout`_)
 - `-i [path1,path2, ...]` defines a list of comma-separated paths to ignore; for example `-i "tests,dist,build,node_modules"`
 - `-r [old:new, ...]` defines a list of comma-separated key:value paths to replace; for example `-r "@:src"`
@@ -102,8 +102,7 @@ To save output to a file, you can use;
 
 ### Output Formats
 
-- **mermaid**: In case the output format is `mermaid`, you can use the mermaid vscode
-  extension or Obsidian or [mermaid.live](https://mermaid.live) to view the output.
+- **mermaid** - _default_: In case the output format is `mermaid`, you can instantly use [mermaid.live](https://mermaid.live) to view the output otherwise checkout this [complete list](https://mermaid.js.org/ecosystem/integrations-community.html).
 - **jsoncanvas**: To view the visual output from `jsoncanvas` output, use one of the apps on this [list](https://jsoncanvas.org/docs/apps/).
 - **json**: This option is meant from storage and usage with json viewer tools. While the search for a compatible and appropriate visualization tool for json output continues, this option may be _removed_ in future releases.
 
