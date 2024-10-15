@@ -56,7 +56,8 @@ but not anymore, depgraph is here!
 	```sh
 	curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/scripts/install.sh | bash
 	```
-- Prebuilt Executables
+- Prebuilt Executables:
+
 	Go to the [Github releases page](https://github.com/henryhale/depgraph/releases/latest) and download a prebuilt executable for your platform/machine.
 
 ## Usage
