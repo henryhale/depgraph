@@ -37,7 +37,11 @@ but not anymore, depgraph is here!
 ## Features
 
 - [x] cli
-- [x] export dependency graphs as formatted text (json, [jsoncanvas](jsoncanvas.org), [mermaid](mermaid.js.org))
+- [x] export dependency graphs as formatted text
+  - [x] json
+  - [x] [jsoncanvas](https://jsoncanvas.org)
+  - [x] [mermaid](https://mermaid.js.org)
+  - [x] [dot](https://graphviz.org/doc/info/lang.html)
 - multi-language support - _**work in progress**_
   - [x] js, ts - _almost done_
   - [x] c, cpp - _in progress_
@@ -71,7 +75,7 @@ Once installed, use
 
 **Optional arguments**
 - `-d <path>` specifies the path to the directory containing source files (_default: current working directory_)
-- `-f <format>` specifies the output format of the result: `mermaid` - _default_, `jsoncanvas`, `json`
+- `-f <format>` specifies the output format of the result: `mermaid` - _default_, `dot`, `jsoncanvas`, `json`
 - `-o <path>` write output to the selected `file` (_default: `stdout`_)
 - `-i [path1,path2, ...]` defines a list of comma-separated paths to ignore; for example `-i "tests,dist,build,node_modules"`
 - `-r [old:new, ...]` defines a list of comma-separated key:value paths to replace; for example `-r "@:src"`
@@ -104,6 +108,7 @@ To save output to a file, you can use;
 ### Output Formats
 
 - **mermaid** - _default_: In case the output format is `mermaid`, you can instantly use [mermaid.live](https://mermaid.live) to view the output otherwise checkout this [complete list](https://mermaid.js.org/ecosystem/integrations-community.html).
+- **dot**: For a quick in-browser visualization & image export, check out: [Edotor](https://edotor.net/), [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/), [Graphviz Visual Editor](https://magjac.com/graphviz-visual-editor/). Otherwise [Graphviz](https://graphviz.org/download/) has a [command line utility](https://graphviz.org/doc/info/command.html) to generate images from the `dot` output.
 - **jsoncanvas**: To view the visual output from `jsoncanvas` output, use one of the apps on this [list](https://jsoncanvas.org/docs/apps/).
 - **json**: This option is meant from storage and usage with json viewer tools. While the search for a compatible and appropriate visualization tool for json output continues, this option may be _removed_ in future releases.
 

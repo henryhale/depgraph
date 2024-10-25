@@ -63,7 +63,7 @@ func Mermaid(deps *lang.DependencyGraph) string {
 				}
 				ids["$$edge$$"+file+itemnode] = struct{}{}
 
-				edges += indent1 + fileID + "-->|uses|" + itemnode + nl
+				edges += indent1 + fileID + "-->|imports|" + itemnode + nl
 			}
 		}
 	}

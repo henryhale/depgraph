@@ -10,6 +10,7 @@ func FormatSupported(f *string) bool {
 		"json",
 		"mermaid",
 		"jsoncanvas",
+		"dot",
 	}
 	return slices.Contains(formats, *f)
 }
@@ -23,6 +24,8 @@ func Format(f *string, deps *lang.DependencyGraph) string {
 		output = Mermaid(deps)
 	case "jsoncanvas":
 		output = JSONCanvas(deps)
+	case "dot":
+		output = DOT(deps)
 
 	// case "html":
 
