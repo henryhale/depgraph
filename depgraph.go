@@ -29,7 +29,7 @@ func main() {
 
 	// help
 	if *config.ShowHelp {
-		fmt.Print("Usage:", Name, "[options]\n\n")
+		fmt.Print("Usage: ", Name, " [options]\n\n")
 		fmt.Println("Options:")
 		flag.PrintDefaults()
 		os.Exit(0)
