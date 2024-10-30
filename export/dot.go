@@ -30,8 +30,8 @@ func DOT(deps* lang.DependencyGraph) string {
 		ids[file + label] = nid
 		snid := fmt.Sprintf("%v", nid)
 		style := ""
-		if label == "*" {
-			style += " style=invis"
+		if label == file {
+			style += " shape=ellipse style=filled fillcolor=lightgray penwidth=0.2"
 		}
 		nodes += indent1 + snid + " [label=\""+ label + "\"" + style + "];"
 		return indent2 + snid + ";" 
@@ -44,10 +44,10 @@ func DOT(deps* lang.DependencyGraph) string {
 		nxtID = nxtID + 1
 		ids[file] = nxtID
 
-		subgraph := fmt.Sprintf(indent1 + "subgraph cluster_%v {" + indent2 + "label=\"" + file + "\";", nxtID)
+		subgraph := fmt.Sprintf(indent1 + "subgraph cluster_%v {" + indent2 + "style=dashed;", nxtID)
 
 		// add a default node to represent internals/file itself
-		internalUse := addNode(file, "*")
+		internalUse := addNode(file, file)
 		subgraph += internalUse
 
 		for _, export := range analysis.Exports {
@@ -62,7 +62,7 @@ func DOT(deps* lang.DependencyGraph) string {
 	for file, analysis := range *deps {
 		for importFile, items := range analysis.Imports {
 			for _, item := range items {
-				fromNode, found := ids[file + "*"]
+				fromNode, found := ids[file + file]
 				if !found {
 					continue
 				}
