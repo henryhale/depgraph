@@ -49,7 +49,7 @@ func GenerateGraphData(deps *lang.DependencyGraph) *Graph {
 		// add exports as child nodes to file
 		for _, export := range result.Exports {
 			id := file + "_" + export
-			if idExists(id) {
+			if len(export) == 0 || idExists(id) {
 				continue
 			}
 			ids[id] = struct{}{}
@@ -66,7 +66,7 @@ func GenerateGraphData(deps *lang.DependencyGraph) *Graph {
 		for importedFile, items := range result.Imports {
 			for _, item := range items {
 				id := file + importedFile
-				if idExists(id) {
+				if len(item) == 0 || idExists(id) {
 					continue
 				}
 				ids[id] = struct{}{}

@@ -34,6 +34,11 @@ func Mermaid(deps *lang.DependencyGraph) string {
 
 		// exports as nodes in subgraph
 		for _, export := range analysis.Exports {
+			txt := cleanLabel(export)
+			if len(txt) == 0 {
+				continue
+			}
+
 			id := fileID + "_" + cleanNodeID(export)
 
 			if idExists(file + id) {
@@ -41,8 +46,7 @@ func Mermaid(deps *lang.DependencyGraph) string {
 			}
 			ids[file+id] = struct{}{}
 
-			text := `["` + cleanLabel(export) + `"]`
-			subgraph += indent2 + id + text + nl
+			subgraph += indent2 + id + `["` + txt + `"]` + nl
 		}
 
 		subgraph += indent1 + "end" + nl
