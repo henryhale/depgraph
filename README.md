@@ -80,15 +80,19 @@ Once installed, use
 - `-i [path1,path2, ...]` defines a list of comma-separated paths to ignore; for example `-i "tests,dist,build,node_modules"`
 - `-r [old:new, ...]` defines a list of comma-separated key:value paths to replace; for example `-r "@:src"`
 
+> [!NOTE]
+> In case you are working with  a large project, you may consider taking small incremental steps
+> by using depgraph to inspect/work on one subfolder at a time. 
+
 ## Examples
 
 - vanilla js project with tests, need mermaid visual
 	```sh
-	depgraph -d /path/to/project -f mermaid -l js -i tests
+	depgraph -d /path/to/folder -f mermaid -l js -i tests
 	```
 - ts/js project with npm packages, tests, root directory alias (src -> @) and json output
 	```sh
-	depgraph -d /path/to/project -f json -l ts -i "tests,node_modules,dist" -r "@:src"
+	depgraph -d /path/to/folder -f json -l ts -i "tests,node_modules,dist" -r "@:src"
 	```
 
 ## Output
@@ -98,11 +102,11 @@ To save output to a file, you can use;
 
 - `-o <path>` option
   ```sh
-  depgraph -d /path/to/project -l js -f json -o graph.json  
+  depgraph -d /path/to/folder -l js -f json -o graph.json  
   ```
 - I/O redirection
   ```sh
-  depgraph -d /path/to/project -l js -f json > graph.json  
+  depgraph -d /path/to/folder -l js -f json > graph.json  
   ```
 
 ### Output Formats
