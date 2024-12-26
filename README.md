@@ -66,23 +66,33 @@ but not anymore, depgraph is here!
 
 ## Usage
 
-Once installed, use
-- `depgraph -h` to display help message
-- `depgraph -v` to show version information
+```txt
+Usage: depgraph [options]
 
-**Required arguments**
-- `-l <language>` sets the programming language: `ts`, `js`, `c`, `cpp` <!-- `go`, `php` -->
+Options:
+	  -d directory
+        Specifies the target directory to analyze (default: current working directory).
 
-**Optional arguments**
-- `-d <path>` specifies the path to the directory containing source files (_default: current working directory_)
-- `-f <format>` specifies the output format of the result: `mermaid` - _default_, `dot`, `jsoncanvas`, `json`
-- `-o <path>` write output to the selected `file` (_default: `stdout`_)
-- `-i [path1,path2, ...]` defines a list of comma-separated paths to ignore; for example `-i "tests,dist,build,node_modules"`
-- `-r [old:new, ...]` defines a list of comma-separated key:value paths to replace; for example `-r "@:src"`
+  	-f format
+        The output format of the analysis: mermaid (default), dot, jsoncanvas, json
 
-> [!NOTE]
-> In case you are working with  a large project, you may consider taking small incremental steps
-> by using depgraph to inspect/work on one subfolder at a time. 
+  	-h, --help
+        Show information about the command-line options and exit.
+    
+  	-i directories
+        A comma-separated list of directories to ignore for example: 'tests,dist,build'
+    
+  	-l language
+        The programming language of the files: js, ts, c, cpp
+    
+  	-o file
+        Write output to the selected file (default: stdout)
+
+  	-r paths
+        A key:value  comma-separated list of paths to replace for example: '@:src,demo:src/demo'
+    
+  	-v    Show the current version information and exit.
+```
 
 ## Examples
 
@@ -94,6 +104,10 @@ Once installed, use
 	```sh
 	depgraph -d /path/to/folder -f json -l ts -i "tests,node_modules,dist" -r "@:src"
 	```
+
+> [!NOTE]
+> In case you are working with a big codebase, you may consider taking small incremental steps
+> by using depgraph to inspect/work on one subfolder at a time. 
 
 ## Output
 
