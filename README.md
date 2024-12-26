@@ -74,27 +74,27 @@ Usage: depgraph [options]
 
 Options:
     -d directory
-    	Specifies the target directory to analyze (default: current working directory).
+        Specifies the target directory to analyze (default: current working directory).
 
-  	-f format
+    -f format
         The output format of the analysis: mermaid (default), dot, jsoncanvas, json
 
-  	-h, --help
+    -h, --help
         Show information about the command-line options and exit.
 
-  	-i directories
+    -i directories
         A comma-separated list of directories to ignore for example: 'tests,dist,build'
 
-  	-l language
+    -l language
         The programming language of the files: js, ts, c, cpp
 
-  	-o file
+    -o file
         Write output to the selected file (default: stdout)
 
-  	-r paths
+    -r paths
         A key:value  comma-separated list of paths to replace for example: '@:src,demo:src/demo'
 
-  	-v    Show the current version information and exit.
+    -v    Show the current version information and exit.
 ```
 
 ## Examples
