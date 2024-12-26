@@ -3,18 +3,21 @@
 echo "depgraph: installing executable..."
 
 # detect os and architecture
-echo "detecting system architecture..."
+echo "depgraph: detecting system architecture..."
 
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
-if [ "$ARCH" == "x86_64" ]; then
+if [ "$ARCH" = "x86_64" ]; then
 	ARCH="amd64"
-elif [ "$ARCH" == "aarch64" ]; then
+elif [ "$ARCH" = "aarch64" ]; then
 	ARCH="arm64"
-elif [ "$ARCH" == "i686" ]; then
+elif [ "$ARCH" = "i686" ]; then
 	ARCH="386"
-fi
+else 
+	echo "depgraph: error: no $ARCH binary found"
+	exit
+fi 
 
 # download binary
 BIN_URL="https://github.com/henryhale/depgraph/releases/latest/download/depgraph-${OS}-${ARCH}"
@@ -27,10 +30,10 @@ if [ "$OS" == "linux" ] && [ -n "$PREFIX" ]; then
 fi
 
 # fetch
-echo "downloading binary..."
+echo "depgraph: downloading binary..."
 
 curl -L "$BIN_URL" -o "$DEST_DIR/depgraph"
 chmod +x "$DEST_DIR/depgraph"
 
-echo "successfully installed depgraph at $DEST_DIR/depgraph"
+echo "depgraph: successfully installed at $DEST_DIR/depgraph"
 echo -e "\ntry it now:\n\t$ depgraph -h"
