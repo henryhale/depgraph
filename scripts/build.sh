@@ -16,9 +16,13 @@ cibuild () {
     GOARCH="$2"
     EXT=""
 
+    BINARY_NAME="depgraph-$GOOS-$GOARCH$EXT"
+
     if [ "$GOOS" = "windows" ]; then EXT=".exe"; fi
 
-    go build -ldflags "-X main.version=$VERSION" -o "depgraph-$GOOS-$GOARCH$EXT" depgraph.go
+    go build -ldflags "-X main.version=$VERSION" -o "$BINARY_NAME" depgraph.go
+
+    zip -m $BINARY_NAME{.zip,}
 }
 
 if [ "$CI" = "ci" ]; then

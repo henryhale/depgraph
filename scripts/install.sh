@@ -5,8 +5,13 @@ echo "depgraph: installing executable..."
 # detect os and architecture
 echo "depgraph: detecting system architecture..."
 
-OS=$(uname | tr '[:upper:]' '[:lower:]')
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
+
+if [ "$OS" != "linux" -1 "$OS" != "darwin"]; then
+	echo "depgraph: error: unsupported operating system"
+	exit 1
+fi
 
 if [ "$ARCH" = "x86_64" ]; then
 	ARCH="amd64"
@@ -20,7 +25,7 @@ else
 fi 
 
 # download binary
-BIN_URL="https://github.com/henryhale/depgraph/releases/latest/download/depgraph-${OS}-${ARCH}"
+BIN_URL="https://github.com/henryhale/depgraph/releases/latest/download/depgraph-${OS}-${ARCH}.zip"
 
 DEST_DIR="/usr/local/bin"
 
@@ -29,11 +34,18 @@ if [ "$OS" == "linux" ] && [ -n "$PREFIX" ]; then
 	DEST_DIR="$PREFIX/bin"
 fi
 
-# fetch
+BINARY_PATH="$DEST_DIR/depgraph"
+
+# fetch binary
 echo "depgraph: downloading binary..."
+curl -L "$BIN_URL" -o "$BINARY_PATH.zip"
+unzip -o "$BINARY_PATH.zip"
 
-curl -L "$BIN_URL" -o "$DEST_DIR/depgraph"
-chmod +x "$DEST_DIR/depgraph"
+echo "depgraph: making binary executable..."
+chmod +x "$BINARY_PATH"
 
-echo "depgraph: successfully installed at $DEST_DIR/depgraph"
+# clean up
+rm -f "$BINARY_PATH.zip"
+
+echo "depgraph: successfully installed at $BINARY_PATH"
 echo -e "\ntry it now:\n\t$ depgraph -h"
