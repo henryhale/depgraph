@@ -22,7 +22,7 @@ cibuild () {
 
     go build -ldflags "-X main.version=$VERSION" -o "$BINARY_NAME" depgraph.go
 
-    zip -m $BINARY_NAME{.zip,}
+    zip -m "$BINARY_NAME.zip" "$BINARY_NAME"
 }
 
 if [ "$CI" = "ci" ]; then
