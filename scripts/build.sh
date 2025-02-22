@@ -22,6 +22,10 @@ cibuild () {
 
     go build -ldflags "-X main.version=$VERSION" -o "$BINARY_NAME" depgraph.go
 
+	if [ "$?" != 0 ]; then
+		exit
+	fi
+
     zip -m "$BINARY_NAME.zip" "$BINARY_NAME"
 }
 
