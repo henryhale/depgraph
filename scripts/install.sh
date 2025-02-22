@@ -1,51 +1,86 @@
 #!/usr/bin/env sh
 
-echo "depgraph: installing executable..."
-
-# detect os and architecture
-echo "depgraph: detecting system architecture..."
+# variables
 
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
+INSTALL_DIR="/usr/bin"
+BINARY_NAME="depgraph"
+BINARY_URL="https://github.com/henryhale/depgraph/releases/latest/download/"
 
-if [ "$OS" != "linux" -1 "$OS" != "darwin"]; then
-	echo "depgraph: error: unsupported operating system"
+# functions
+
+is_termux() {
+	if [ -n "$TERMUX_VERSION" ] && [ -n "$PREFIX" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+log () {
+	echo "[depgraph] : $@"
+}
+
+fatal() {
+	echo "[depgraph] error: $@"
 	exit 1
-fi
+}
 
-if [ "$ARCH" = "x86_64" ]; then
-	ARCH="amd64"
-elif [ "$ARCH" = "aarch64" ]; then
-	ARCH="arm64"
-elif [ "$ARCH" = "i686" ]; then
-	ARCH="386"
-else 
-	echo "depgraph: error: no $ARCH binary found"
-	exit
-fi 
+set_arch() {
+	log "detecting system architecture..."
 
-# download binary
-BIN_URL="https://github.com/henryhale/depgraph/releases/latest/download/depgraph-${OS}-${ARCH}.zip"
+	if [ "$OS" != "linux" -1 "$OS" != "darwin"]; then
+		fatal "unsupported operating system"
+	fi
 
-DEST_DIR="/usr/local/bin"
+	if [ "$ARCH" = "x86_64" ]; then
+		ARCH="amd64"
+	elif [ "$ARCH" = "aarch64" ]; then
+		ARCH="arm64"
+	elif [ "$ARCH" = "i686" ]; then
+		ARCH="386"
+	else
+		fatal "no $ARCH binary found"
+	fi
+}
 
-# termux support
-if [ "$OS" == "linux" ] && [ -n "$PREFIX" ]; then
-	DEST_DIR="$PREFIX/bin"
-fi
+set_install_dir() {
+	if is_termux; then
+		INSTALL_DIR="$PREFIX/bin"
+	elif [ ! -w "/usr/local/bin" ]; then
+		INSTALL_DIR="$HOME/.local/bin"
+		mkdir -p "$INSTALL_DIR"
+	fi
+}
 
-BINARY_PATH="$DEST_DIR/depgraph"
+install_binary() {
+	log "downloading binary..."
+	RELEASE_NAME="depgraph-${OS}-${ARCH}"
+	curl -L -o "$TMPDIR/$RELEASE_NAME.zip" "$BINARY_URL$RELEASE_NAME.zip"
 
-# fetch binary
-echo "depgraph: downloading binary..."
-curl -L "$BIN_URL" -o "$BINARY_PATH.zip"
-unzip -o "$BINARY_PATH.zip"
+	if [ $? -ne 0 ]; then
+        fatal "download failed"
+    fi
 
-echo "depgraph: making binary executable..."
-chmod +x "$BINARY_PATH"
+	unzip -o "$TMPDIR/$RELEASE_NAME.zip" -d "$TMPDIR"
 
-# clean up
-rm -f "$BINARY_PATH.zip"
+	log "making binary executable..."
+	chmod +x "$TMPDIR/$RELEASE_NAME"
+	cp "$TMPDIR/$RELEASE_NAME" "$INSTALL_DIR/$BINARY_NAME"
 
-echo "depgraph: successfully installed at $BINARY_PATH"
-echo -e "\ntry it now:\n\t$ depgraph -h"
+	./$TMPDIR/$RELEASE_NAME
+}
+
+
+log "installing executable..."
+
+# detect os and architecture
+set_arch
+
+# download and install binary
+set_install_dir
+
+install_binary
+
+echo -e "successfully installed at $INSTALL_DIR/BINARY_NAME\ntry it now:\n\t$ depgraph -h"
