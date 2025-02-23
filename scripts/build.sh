@@ -33,6 +33,7 @@ if [ "$CI" = "ci" ]; then
     echo "building for linux..."
     cibuild linux amd64
     cibuild linux arm64
+    cibuild linux arm
     cibuild linux 386
 
     echo "building for darwin..."
@@ -42,6 +43,7 @@ if [ "$CI" = "ci" ]; then
     echo "building for windows..."
     cibuild windows amd64
     cibuild windows arm64
+    cibuild windows 386
 else
     localbuild
 fi
