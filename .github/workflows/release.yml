@@ -24,7 +24,7 @@ jobs:
       - name: build binary
         run: |
           ./scripts/build.sh ci
-          echo ${{ github.hash }} > checksum.sha.txt
+          sha256sum depgraph-* > sha256sums.txt
 
       - name: list binaries
         run: ls depgraph-*
@@ -35,6 +35,6 @@ jobs:
           generate_release_notes: true
           files: |
             depgraph-*.zip
-            checksum.sha.txt
+            sha256sums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
