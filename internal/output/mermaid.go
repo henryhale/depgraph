@@ -1,13 +1,13 @@
-package export
+package output
 
 import (
 	"regexp"
 	"strings"
 
-	"github.com/henryhale/depgraph/lang"
+	"github.com/henryhale/depgraph/internal/graph"
 )
 
-func Mermaid(deps *lang.DependencyGraph) string {
+func Mermaid(deps *graph.DependencyGraph) string {
 	indent1 := "  "
 	indent2 := indent1 + indent1
 	nl := "\n"

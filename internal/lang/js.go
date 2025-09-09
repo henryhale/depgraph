@@ -1,9 +1,10 @@
 package lang
 
 import (
-	"github.com/henryhale/depgraph/util"
 	"path/filepath"
 	"slices"
+
+	"github.com/henryhale/depgraph/internal/util"
 )
 
 // JavaScript

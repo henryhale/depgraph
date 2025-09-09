@@ -1,8 +1,9 @@
 package lang
 
 import (
-	"github.com/henryhale/depgraph/util"
 	"regexp"
+
+	"github.com/henryhale/depgraph/internal/util"
 )
 
 // C/C++

@@ -23,8 +23,6 @@ func (r *SourceFile) AddImport(path string, items []string) {
 	}
 }
 
-type DependencyGraph map[string]SourceFile
-
 type Rule struct {
 	RegExp string
 	File   int

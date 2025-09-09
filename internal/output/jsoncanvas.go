@@ -1,4 +1,4 @@
-package export
+package output
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/henryhale/depgraph/lang"
+	"github.com/henryhale/depgraph/internal/graph"
 )
 
 type jcNode struct {
@@ -35,8 +35,8 @@ type jcGraph struct {
 	Edges []jcEdge `json:"edges,omitempty"`
 }
 
-func JSONCanvas(deps *lang.DependencyGraph) string {
-	graph := GenerateGraphData(deps)
+func JSONCanvas(deps *graph.DependencyGraph) string {
+	graph := graph.GenerateGraphData(deps)
 
 	output := jcGraph{}
 

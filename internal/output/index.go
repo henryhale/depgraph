@@ -1,8 +1,9 @@
-package export
+package output
 
 import (
-	"github.com/henryhale/depgraph/lang"
 	"slices"
+
+	"github.com/henryhale/depgraph/internal/graph"
 )
 
 func FormatSupported(f *string) bool {
@@ -15,7 +16,7 @@ func FormatSupported(f *string) bool {
 	return slices.Contains(formats, *f)
 }
 
-func Format(f *string, deps *lang.DependencyGraph) string {
+func Format(f *string, deps *graph.DependencyGraph) string {
 	var output string
 	switch *f {
 	case "json":

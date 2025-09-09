@@ -8,9 +8,10 @@ import (
 	"regexp"
 
 	"github.com/henryhale/depgraph/cmd"
-	"github.com/henryhale/depgraph/export"
-	"github.com/henryhale/depgraph/lang"
-	"github.com/henryhale/depgraph/util"
+	"github.com/henryhale/depgraph/internal/graph"
+	"github.com/henryhale/depgraph/internal/lang"
+	"github.com/henryhale/depgraph/internal/output"
+	"github.com/henryhale/depgraph/internal/util"
 )
 
 // command name
@@ -51,7 +52,7 @@ func main() {
 	}
 
 	// check output format
-	if !export.FormatSupported(config.OutputFormat) {
+	if !output.FormatSupported(config.OutputFormat) {
 		log.Fatal("'" + *config.OutputFormat + "' output format is not supported")
 	}
 
@@ -64,7 +65,7 @@ func main() {
 	}
 
 	// build deps map - analyze each file
-	deps := make(lang.DependencyGraph)
+	deps := make(graph.DependencyGraph)
 	// keep track of external dependencies
 	external := make(map[string][]string)
 
@@ -129,7 +130,7 @@ func main() {
 	}
 
 	// produce formatted output
-	output := export.Format(config.OutputFormat, &deps)
+	output := output.Format(config.OutputFormat, &deps)
 
 	// done!
 	if *config.OutputFile == "stdout" {

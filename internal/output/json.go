@@ -1,14 +1,14 @@
-package export
+package output
 
 import (
 	"encoding/json"
 	"log"
 
-	"github.com/henryhale/depgraph/lang"
+	"github.com/henryhale/depgraph/internal/graph"
 )
 
-func JSON(deps *lang.DependencyGraph) string {
-	graph := GenerateGraphData(deps)
+func JSON(deps *graph.DependencyGraph) string {
+	graph := graph.GenerateGraphData(deps)
 
 	output, err := json.MarshalIndent(graph, "", "  ")
 
