@@ -22,6 +22,8 @@ go.work.sum
 .env
 
 # build output
+dist
+
 depgraph
 depgraph-*
 
