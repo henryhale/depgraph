@@ -165,7 +165,7 @@ proposing a new feature:
 ## Building
 
 To build this project locally, ensure that you have
-[Go v1.23.2](https://go.dev/doc/install) installed.
+[Go v1.23.2 or above](https://go.dev/doc/install) installed.
 
 Clone this repository using:
 `git clone https://github.com/henryhale/depgraph.git`
