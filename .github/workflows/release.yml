@@ -23,7 +23,7 @@ jobs:
 
       # build with gopack
       - name: build and package binaries
-        uses: henryhale/gopack@v1.0.2
+        uses: henryhale/gopack@v1.0.3
         with:
           name: depgraph
           path: "."
