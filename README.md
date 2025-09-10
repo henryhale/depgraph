@@ -10,8 +10,8 @@ A developer's tool to understanding new codebases
 
 ## Overview
 
-This is a cli tool that tends to visualize a codebase right from inter-file ~~to
-in-file~~ dependency so you can understand how it is developed. It is basically
+This is a CLI tool that tends to visualize a codebase right from inter-file ~~to
+in-file~~ dependency so you can understand how it is organized/developed. It is basically
 based on the fact that every programming language has known standard approaches
 to handling modules/packages; imports and exports. Unlike existing dependency
 resolution/visualization tools that are language-specific or parser-centric,
@@ -37,35 +37,32 @@ codebases can scare, but not anymore, depgraph is here!
 
 ## Features
 
--   [x] cli
--   [x] export dependency graphs as formatted text
-    -   [x] json
-    -   [x] [jsoncanvas](https://jsoncanvas.org)
-    -   [x] [mermaid](https://mermaid.js.org)
-    -   [x] [dot](https://graphviz.org/doc/info/lang.html)
--   multi-language support - _**work in progress**_
-    -   [x] js, ts - _almost done_
-    -   [x] c, cpp - _in progress_
-    -   [ ] go
-    -   [ ] python
-    -   [ ] php
-    -   [ ] ....
--   [ ] interactive web interface (maybe d3.js or cyptoscape.js)
--   [ ] generating images from the graph (like png, svg)
+- [x] command-line interface
+- [x] export dependency graphs as formatted text
+  - [x] json
+  - [x] [jsoncanvas](https://jsoncanvas.org)
+  - [x] [mermaid](https://mermaid.js.org)
+  - [x] [dot](https://graphviz.org/doc/info/lang.html)
+- multi-language support - _**work in progress**_
+  - [x] js, ts, jsx, tsx
+  - [x] c, cpp
+  - [x] go
+- [ ] interactive web interface (maybe d3.js or cyptoscape.js)
+- [ ] generating images from the graph (like png, svg)
 
 ... and more to come
 
 ## Installation
 
--   Using a shell script: Linux/Mac/Termux/WSL
-    ```sh
-    curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/scripts/install.sh | bash
-    ```
--   Prebuilt Executables:
+- Using a shell script: Linux/Mac/Termux/WSL
+  ```sh
+  curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/scripts/install.sh | bash
+  ```
+- Prebuilt Executables:
 
-    Go to the
-    [Github releases page](https://github.com/henryhale/depgraph/releases/latest)
-    and download a prebuilt executable for your platform/machine.
+  Go to the
+  [Github releases page](https://github.com/henryhale/depgraph/releases/latest)
+  and download a prebuilt executable for your platform/machine.
 
 ## Usage
 
@@ -99,15 +96,15 @@ Options:
 
 ## Examples
 
--   vanilla js project with tests, need mermaid visual
-    ```sh
-    depgraph -d /path/to/folder -f mermaid -l js -i tests
-    ```
--   ts/js project with npm packages, tests, root directory alias (src -> @) and
-    json output
-    ```sh
-    depgraph -d /path/to/folder -f json -l ts -i "tests,node_modules,dist" -r "@:src"
-    ```
+- vanilla js project with tests, need mermaid visual
+  ```sh
+  depgraph -d /path/to/folder -f mermaid -l js -i tests
+  ```
+- ts/js project with npm packages, tests, root directory alias (src -> @) and
+  json output
+  ```sh
+  depgraph -d /path/to/folder -f json -l ts -i "tests,node_modules,dist" -r "@:src"
+  ```
 
 > [!NOTE]
 > In case you are working with a big codebase, you may consider taking
@@ -119,33 +116,33 @@ Options:
 By default, the output is written to `stdout`. To save output to a file, you can
 use;
 
--   `-o <path>` option
-    ```sh
-    depgraph -d /path/to/folder -l js -f json -o graph.json
-    ```
--   I/O redirection
-    ```sh
-    depgraph -d /path/to/folder -l js -f json > graph.json
-    ```
+- `-o <path>` option
+  ```sh
+  depgraph -d /path/to/folder -l js -f json -o graph.json
+  ```
+- I/O redirection
+  ```sh
+  depgraph -d /path/to/folder -l js -f json > graph.json
+  ```
 
 ### Output Formats
 
--   **mermaid** - _default_: In case the output format is `mermaid`, you can
-    instantly use [mermaid.live](https://mermaid.live) to view the output
-    otherwise checkout this
-    [complete list](https://mermaid.js.org/ecosystem/integrations-community.html).
--   **dot**: For a quick in-browser visualization & image export, check out:
-    [Edotor](https://edotor.net/),
-    [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/),
-    [Graphviz Visual Editor](https://magjac.com/graphviz-visual-editor/).
-    Otherwise [Graphviz](https://graphviz.org/download/) has a
-    [command line utility](https://graphviz.org/doc/info/command.html) to
-    generate images from the `dot` output.
--   **jsoncanvas**: To view the visual output from `jsoncanvas` output, use one
-    of the apps on this [list](https://jsoncanvas.org/docs/apps/).
--   **json**: This option is meant from storage and usage with json viewer
-    tools. While the search for a compatible and appropriate visualization tool
-    for json output continues, this option may be _removed_ in future releases.
+- **mermaid** - _default_: In case the output format is `mermaid`, you can
+  instantly use [mermaid.live](https://mermaid.live) to view the output
+  otherwise checkout this
+  [complete list](https://mermaid.js.org/ecosystem/integrations-community.html).
+- **dot**: For a quick in-browser visualization & image export, check out:
+  [Edotor](https://edotor.net/),
+  [GraphvizOnline](https://dreampuf.github.io/GraphvizOnline/),
+  [Graphviz Visual Editor](https://magjac.com/graphviz-visual-editor/).
+  Otherwise [Graphviz](https://graphviz.org/download/) has a
+  [command line utility](https://graphviz.org/doc/info/command.html) to
+  generate images from the `dot` output.
+- **jsoncanvas**: To view the visual output from `jsoncanvas` output, use one
+  of the apps on this [list](https://jsoncanvas.org/docs/apps/).
+- **json**: This option is meant from storage and usage with json viewer
+  tools. While the search for a compatible and appropriate visualization tool
+  for json output continues, this option may be _removed_ in future releases.
 
 ## How it works
 
