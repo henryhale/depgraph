@@ -72,7 +72,7 @@ func main() {
 	extractorOptions := new(lang.ExtractorOptions)
 	extractorOptions.Replacers = &config.ReplacePaths
 
-	for _, file := range *files {
+	for _, filePath := range *files {
 		result := lang.SourceFile{
 			Imports: make(map[string][]string),
 			Exports: []string{},
@@ -80,13 +80,18 @@ func main() {
 		}
 
 		extractorOptions.Result = &result
-		extractorOptions.File = &file.Path
+		extractorOptions.File = &filePath
 
-		file.Code = util.Preprocess(file.Code, pl.Comments)
+		fileContent, err := os.ReadFile(filePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		sourceCode := util.Preprocess(string(fileContent), pl.Comments)
 
 		for _, rule := range pl.Rules {
 			re := regexp.MustCompile(rule.RegExp)
-			matches := re.FindAllStringSubmatch(file.Code, -1)
+			matches := re.FindAllStringSubmatch(sourceCode, -1)
 			if matches == nil {
 				continue
 			}
@@ -100,12 +105,12 @@ func main() {
 			}
 		}
 
-		deps[file.Path] = result
+		deps[filePath] = result
 
 		// ensure all imports exist or atleast external
-		_, isExternal := external[file.Path]
+		_, isExternal := external[filePath]
 		if isExternal {
-			delete(external, file.Path)
+			delete(external, filePath)
 		}
 		for importpath, items := range result.Imports {
 			_, exists := deps[importpath]

@@ -8,24 +8,15 @@ import (
 	"strings"
 )
 
-type File struct {
-	Path string
-	Code string
-}
-
 // recursively list of all files in a directory
-func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]string) (*[]File, error) {
-	var files []File
+func TraverseDirectory(root *string, extensions *[]string, ignoredPaths *[]string) (*[]string, error) {
+	var files []string
 	err := filepath.WalkDir(*root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if !d.IsDir() && isValidFile(&path, extensions, ignoredPaths) {
-			code, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
-			files = append(files, File{path, string(code)})
+			files = append(files, path)
 		}
 		return nil
 	})
