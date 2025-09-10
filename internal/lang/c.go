@@ -8,8 +8,7 @@ import (
 
 // C/C++
 var CC = Language{
-	Extensions:    []string{".c", ".h", ".cpp", ".hpp", ".cc", ".cxx"},
-	LocateImports: false,
+	Extensions: []string{".c", ".h", ".cpp", ".hpp", ".cc", ".cxx"},
 	Rules: []Rule{
 		// standard include
 		{`#include\s*<([^>]+)>`, 1, -1, false},
@@ -39,8 +38,8 @@ var CC = Language{
 		// imports
 		if !rule.Export && rule.File > 0 {
 			partial := match[rule.File]
-			isStandard, _ := regexp.Match(`<.*>`, []byte(match[0]))
-			if isStandard {
+			isStandardCLib, _ := regexp.Match(`<.*>`, []byte(match[0]))
+			if isStandardCLib {
 				result.AddImport(partial, []string{"*"})
 				return
 			}

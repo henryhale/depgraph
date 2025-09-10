@@ -45,9 +45,6 @@ type Language struct {
 	Rules []Rule
 	// comments
 	Comments *[]string
-	// for languages using the import statements but
-	// don't specify actual imports like go, dart, py
-	LocateImports bool
 	// imports and exports extractor
 	Extract func(*ExtractorOptions)
 }
@@ -68,16 +65,13 @@ func Get(ext string) (lang Language, supported bool) {
 	case "cpp":
 		lang = CC
 
-	// go -> go.go
-	// case "go": lang = GO
-
-	// php -> php.go
-	// case "php": lang = PHP
-
-	// ...
+	// go.go
+	case "go":
+		lang = GO
 
 	default:
 		supported = false
 	}
+
 	return
 }

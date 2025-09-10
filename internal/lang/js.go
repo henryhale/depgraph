@@ -10,11 +10,10 @@ import (
 // JavaScript
 
 // extensions
-var exts = []string{".js", ".mjs", ".cjs", ".ts", ".mts", ".cts"}
+var jsExts = []string{".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".jsx", ".tsx"}
 
 var JavaScript = Language{
-	Extensions:    exts,
-	LocateImports: false,
+	Extensions: jsExts,
 	Rules: []Rule{
 		// importESNamed
 		{`import\s*\{([^}]*)\}\s*from\s*['"](.*)['"];?`, 2, 1, false},
@@ -68,16 +67,16 @@ var JavaScript = Language{
 
 /*
 in case of 'demo/app' check for:
-- 'demo/app.{js,ts,mjs,cjs}'
-- 'demo/app/index.{js,ts,mjs,cjs}'
+- 'demo/app.{js,ts,mjs,cjs,jsx,tsx}'
+- 'demo/app/index.{js,ts,mjs,cjs,jsx,tsx}'
 */
 func findJsFile(path string) string {
 	ext := filepath.Ext(path)
-	if len(ext) > 0 && slices.Contains(exts, ext) {
+	if len(ext) > 0 && slices.Contains(jsExts, ext) {
 		return path
 	}
 
-	for _, ext := range exts {
+	for _, ext := range jsExts {
 		if util.FileExists(path + ext) {
 			return path + ext
 		}
