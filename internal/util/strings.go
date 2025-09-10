@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// split a string into segments
+// split a string into segments - comma as a delimiter
 func Explode(value string) *[]string {
 	value = strings.TrimSpace(value)
 	badChars := []string{" ", "\t", "\n", "\r", "\""}
