@@ -21,7 +21,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: lts
+          node-version: latest
 
       - name: set up golang
         uses: actions/setup-go@v5
