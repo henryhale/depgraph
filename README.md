@@ -54,6 +54,12 @@ codebases can scare, but not anymore, depgraph is here!
 
 ## Installation
 
+- Using an [installation script](./scripts/install.sh): Linux/Mac/Termux/WSL
+
+  ```sh
+  curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/scripts/install.sh | sh
+  ```
+
 - Install prebuilt executables for Linux/Mac/Termux/WSL:
 
   Go to the
