@@ -37,7 +37,6 @@ jobs:
           dest: ./dist/
           ldflags: "-s -w -X 'main.version=$(git describe --tags)'"
           checksum: checksums.txt
-          includeVersion: false
 
       - name: list binaries
         run: ls ./dist/
