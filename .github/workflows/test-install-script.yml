@@ -1,0 +1,17 @@
+name: test installation via script 
+
+on:
+  push:
+
+jobs:
+  test-install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install from script
+        run: curl -fsSL https://raw.githubusercontent.com/henryhale/depgraph/master/scripts/install.sh | sh
+
+      - name: verify
+        run: |
+          which depgraph
+          depgraph -v
