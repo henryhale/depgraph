@@ -2,6 +2,9 @@ name: test installation via script
 
 on:
   push:
+    branches:
+      -master
+  workflow_dispatch:
 
 jobs:
   test-install:
