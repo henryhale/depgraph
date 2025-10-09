@@ -20,12 +20,12 @@ is_termux() {
 
 detect_os() {
 	log "detecting system os..."
-if is_termux; then
+	if is_termux; then
 		OS="linux"
 		return
 	fi
 	OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-	if [ "$OS" != "linux" -1 "$OS" != "darwin"]; then
+	if [ "$OS" != "linux" ] && [ "$OS" != "darwin"]; then
 		fatal "unsupported operating system"
 	fi
 }
@@ -33,7 +33,7 @@ if is_termux; then
 detect_arch() {
 	log "detecting system architecture..."
 
-	if [ "$OS" != "linux" -1 "$OS" != "darwin"]; then
+	if [ "$OS" != "linux" ] && [ "$OS" != "darwin"]; then
 		fatal "unsupported operating system"
 	fi
 
@@ -86,22 +86,37 @@ set_install_dir() {
 install_binary() {
 	log "downloading binary..."
 	RELEASE_NAME="depgraph_${OS}_${ARCH}"
-	curl -L -o "$TMPDIR/$RELEASE_NAME.zip" "$BINARY_URL$RELEASE_NAME.zip"
+	RELEASE_TAR="$RELEASE_NAME.tar"
+	RELEASE_GZ="$RELEASE_NAME.tar.gz"
+
+	TMP_DIR="/tmp/"
+	if is_termux; then
+		TMP_DIR="$TMPDIR"
+	fi
+	
+	curl -L -o "$TMP_DIR/$RELEASE_GZ" "$BINARY_URL$RELEASE_NAME.tar.gz"
 
 	check_exec_error
 
-	unzip -o "$TMPDIR/$RELEASE_NAME.zip" -d "$TMPDIR"
+	gunzip -f "$TMP_DIR/$RELEASE_GZ"
+
+	check_exec_error
+
+	cd "$TMP_DIR" && tar -xvf "$RELEASE_TAR"
 
 	check_exec_error
 
 	log "making binary executable..."
-	chmod +x "$TMPDIR/$RELEASE_NAME"
+	chmod +x "$TMP_DIR/$RELEASE_NAME"
 
 	check_exec_error
 
-	cp "$TMPDIR/$RELEASE_NAME" "$INSTALL_DIR/$BINARY_NAME"
+	cp "$TMP_DIR/$RELEASE_NAME" "$INSTALL_DIR/$BINARY_NAME"
 
 	check_exec_error
+
+	log "cleaning up..."
+	rm -f "$TMP_DIR/$BINARY_NAME*"
 }
 
 
@@ -116,4 +131,5 @@ set_install_dir
 
 install_binary
 
-echo -e "successfully installed at $INSTALL_DIR/$BINARY_NAME\ntry it now:\n\t$ depgraph -h"
+log "successfully installed at $INSTALL_DIR/$BINARY_NAME"
+log "try it now: $ depgraph -h"
