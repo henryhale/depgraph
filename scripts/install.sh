@@ -41,7 +41,7 @@ detect_arch() {
 
 	case "$ARCH" in
         x86_64|amd64)
-            ARCH="amd64"
+            ARCH="x86_64"
             ;;
         i686|i386)
             ARCH="i386"
@@ -89,7 +89,7 @@ install_binary() {
 	RELEASE_TAR="$RELEASE_NAME.tar"
 	RELEASE_GZ="$RELEASE_NAME.tar.gz"
 
-	TMP_DIR="/tmp/"
+	TMP_DIR="/tmp"
 	if is_termux; then
 		TMP_DIR="$TMPDIR"
 	fi
