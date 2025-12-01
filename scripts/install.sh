@@ -4,7 +4,7 @@
 
 OS="unknown"
 ARCH="unknown"
-INSTALL_DIR="/usr/bin"
+INSTALL_DIR="/usr/local/bin/"
 BINARY_NAME="depgraph"
 BINARY_URL="https://github.com/henryhale/depgraph/releases/latest/download/"
 
