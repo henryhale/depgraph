@@ -27,7 +27,11 @@ var Python = Language{
 		// class export
 		{`^class\s+([A-Z][\w]*)`, -1, 1, true},
 	},
-	Comments: &[]string{"#"},
+	Comments: &[]string{
+        `(?m)^#.*$`,        // single-line comments
+        `(?s)"""(.*?)"""`,  // triple double-quote docstrings
+        `(?s)'''(.*?)'''`,  // triple single-quote docstrings
+    },
 	Extract: func(options *ExtractorOptions) {
 		rule := options.Rule
 		match := *options.Match

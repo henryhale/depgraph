@@ -1,9 +1,30 @@
-from test import add, Calculator
+"""
+Module 1 for testing inter-file dependencies.
+
+Example:
+    import json
+    data = compute()
+"""
 
 def compute():
-    result = add(1, 2)
-    calc = Calculator()
-    return result
+    """
+    Computes something.
+
+    Example:
+        from datetime import datetime
+        now = datetime.now()
+        print(compute())
+    """
+    return 42
 
 class Processor:
-    pass
+    """
+    Processes data.
+
+    Example:
+        import re
+        p = Processor()
+        p.process("data")
+    """
+    def process(self, data):
+        return data.upper()
