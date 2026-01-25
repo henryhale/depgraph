@@ -1,17 +1,21 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"regexp"
+	"runtime"
+	"sync"
 
 	"github.com/henryhale/depgraph/cmd"
 	"github.com/henryhale/depgraph/internal/graph"
 	"github.com/henryhale/depgraph/internal/lang"
 	"github.com/henryhale/depgraph/internal/output"
 	"github.com/henryhale/depgraph/internal/util"
+	"golang.org/x/sync/errgroup"
 )
 
 // command name
@@ -64,64 +68,80 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// build deps map - analyze each file
+	// build deps map - analyze each file concurrently
 	deps := make(graph.DependencyGraph)
-	// keep track of external dependencies
+	var mu sync.Mutex // protect deps map
 	external := make(map[string][]string)
+	allImports := make(map[string][]string)
+	var impMu sync.Mutex // protect allImports map
 
-	extractorOptions := new(lang.ExtractorOptions)
-	extractorOptions.Replacers = &config.ReplacePaths
+	g, _ := errgroup.WithContext(context.Background())
+	g.SetLimit(runtime.NumCPU()) // limit concurrency
 
 	for _, filePath := range *files {
-		result := lang.SourceFile{
-			Imports: make(map[string][]string),
-			Exports: []string{},
-			Local:   true,
-		}
-
-		extractorOptions.Result = &result
-		extractorOptions.File = &filePath
-
-		fileContent, err := os.ReadFile(filePath)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		sourceCode := util.Preprocess(string(fileContent), pl.Comments)
-
-		for _, rule := range pl.Rules {
-			re := regexp.MustCompile(rule.RegExp)
-			matches := re.FindAllStringSubmatch(sourceCode, -1)
-			if matches == nil {
-				continue
+		filePath := filePath // capture loop variable
+		g.Go(func() error {
+			result := lang.SourceFile{
+				Imports: make(map[string][]string),
+				Exports: []string{},
+				Local:   true,
 			}
 
-			extractorOptions.Rule = &rule
+			extractorOptions := new(lang.ExtractorOptions)
+			extractorOptions.Replacers = &config.ReplacePaths
+			extractorOptions.Result = &result
+			extractorOptions.File = &filePath
 
-			for _, match := range matches {
-				extractorOptions.Match = &match
-
-				pl.Extract(extractorOptions)
+			fileContent, err := os.ReadFile(filePath)
+			if err != nil {
+				return err
 			}
-		}
 
-		deps[filePath] = result
+			sourceCode := util.Preprocess(string(fileContent), pl.Comments)
 
-		// ensure all imports exist or atleast external
-		_, isExternal := external[filePath]
-		if isExternal {
-			delete(external, filePath)
-		}
-		for importpath, items := range result.Imports {
-			_, exists := deps[importpath]
-			if !exists {
-				_, alreadyExternal := external[importpath]
-				if alreadyExternal {
-					external[importpath] = append(external[importpath], items...)
-				} else {
-					external[importpath] = items
+			for _, rule := range pl.Rules {
+				re := regexp.MustCompile(rule.RegExp)
+				matches := re.FindAllStringSubmatch(sourceCode, -1)
+				if matches == nil {
+					continue
+				}
+
+				extractorOptions.Rule = &rule
+
+				for _, match := range matches {
+					extractorOptions.Match = &match
+
+					pl.Extract(extractorOptions)
 				}
 			}
+
+			mu.Lock()
+			deps[filePath] = result
+			mu.Unlock()
+
+			// collect all imports
+			impMu.Lock()
+			for importpath, items := range result.Imports {
+				if existing, ok := allImports[importpath]; ok {
+					allImports[importpath] = append(existing, items...)
+				} else {
+					allImports[importpath] = items
+				}
+			}
+			impMu.Unlock()
+
+			return nil
+		})
+	}
+
+	if err := g.Wait(); err != nil {
+		log.Fatal(err)
+	}
+
+	// build externals
+	for path, items := range allImports {
+		if _, exists := deps[path]; !exists {
+			external[path] = items
 		}
 	}
 
