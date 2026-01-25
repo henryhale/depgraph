@@ -69,6 +69,10 @@ func Get(ext string) (lang Language, supported bool) {
 	case "go":
 		lang = GO
 
+	// python.go
+	case "py":
+		lang = Python
+
 	default:
 		supported = false
 	}
