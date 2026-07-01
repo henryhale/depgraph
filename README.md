@@ -181,6 +181,8 @@ yields a binary executable; using your shell, run
 
 ```sh
 bash scripts/build.sh
+# or
+make build
 ```
 
 or

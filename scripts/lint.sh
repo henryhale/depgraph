@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
-gofmt -w .
+go vet ./
+
+gofmt -w ./
 
 golangci-lint run
