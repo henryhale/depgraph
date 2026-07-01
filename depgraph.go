@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
 
 	"github.com/henryhale/depgraph/cmd"
 	"github.com/henryhale/depgraph/internal/graph"
@@ -69,41 +68,13 @@ func main() {
 	// keep track of external dependencies
 	external := make(map[string][]string)
 
-	extractorOptions := new(lang.ExtractorOptions)
-	extractorOptions.Replacers = &config.ReplacePaths
-
 	for _, filePath := range *files {
-		result := lang.SourceFile{
-			Imports: make(map[string][]string),
-			Exports: []string{},
-			Local:   true,
-		}
-
-		extractorOptions.Result = &result
-		extractorOptions.File = &filePath
-
 		fileContent, err := os.ReadFile(filePath)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		sourceCode := util.Preprocess(string(fileContent), pl.Comments)
-
-		for _, rule := range pl.Rules {
-			re := regexp.MustCompile(rule.RegExp)
-			matches := re.FindAllStringSubmatch(sourceCode, -1)
-			if matches == nil {
-				continue
-			}
-
-			extractorOptions.Rule = &rule
-
-			for _, match := range matches {
-				extractorOptions.Match = &match
-
-				pl.Extract(extractorOptions)
-			}
-		}
+		result := lang.Analyze(pl, string(fileContent), filePath, &config.ReplacePaths)
 
 		deps[filePath] = result
 

@@ -46,14 +46,14 @@ func JSONCanvas(deps *graph.DependencyGraph) string {
 		padding    = 50.0
 	)
 
-	// calculate grid positions
+	// calculate grid positions: lay nodes out left-to-right, top-to-bottom
+	// over a roughly square grid of `cols` columns.
 	cols := int(math.Ceil(math.Sqrt(float64(len(graph.Nodes)))))
-	rows := (len(graph.Nodes) + cols - 1) / cols
 
 	// transform nodes
 	for i, node := range graph.Nodes {
 		col := i % cols
-		row := i / rows
+		row := i / cols
 
 		posX := float64(col)*(nodeWidth+padding) + padding
 		posY := float64(row)*(nodeHeight+padding) + padding

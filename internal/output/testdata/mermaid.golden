@@ -1,0 +1,10 @@
+graph LR
+  subgraph a.js
+    a.js_main["main"]
+  end
+  subgraph b.js
+    b.js_foo["foo"]
+    b.js_bar["bar"]
+  end
+  a.js-->|imports|b.js_foo
+  a.js-->|imports|b.js_bar

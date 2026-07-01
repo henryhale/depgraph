@@ -22,7 +22,8 @@ func Mermaid(deps *graph.DependencyGraph) string {
 		return found
 	}
 
-	for file, analysis := range *deps {
+	for _, file := range sortedFiles(deps) {
+		analysis := (*deps)[file]
 		fileID := cleanNodeID(file)
 
 		if idExists(fileID) {
@@ -54,7 +55,8 @@ func Mermaid(deps *graph.DependencyGraph) string {
 		graph += subgraph
 
 		// resolve edges
-		for importedFile, items := range analysis.Imports {
+		for _, importedFile := range sortedImports(analysis.Imports) {
+			items := analysis.Imports[importedFile]
 			iFileID := cleanNodeID(importedFile)
 			for _, item := range items {
 				itemnode := iFileID

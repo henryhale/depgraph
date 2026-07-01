@@ -38,7 +38,8 @@ func DOT(deps *graph.DependencyGraph) string {
 		return indent2 + snid + ";"
 	}
 
-	for file, analysis := range *deps {
+	for _, file := range sortedFiles(deps) {
+		analysis := (*deps)[file]
 		if idExists(file) {
 			continue
 		}
@@ -60,8 +61,10 @@ func DOT(deps *graph.DependencyGraph) string {
 		subgraphs += subgraph
 	}
 
-	for file, analysis := range *deps {
-		for importFile, items := range analysis.Imports {
+	for _, file := range sortedFiles(deps) {
+		analysis := (*deps)[file]
+		for _, importFile := range sortedImports(analysis.Imports) {
+			items := analysis.Imports[importFile]
 			for _, item := range items {
 				fromNode, found := ids[file+file]
 				if !found {

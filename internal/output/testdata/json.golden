@@ -1,0 +1,46 @@
+{
+  "nodes": [
+    {
+      "id": "a.js",
+      "label": "a.js",
+      "parent": "",
+      "type": "group"
+    },
+    {
+      "id": "a.js_main",
+      "label": "main",
+      "parent": "a.js",
+      "type": "text"
+    },
+    {
+      "id": "b.js",
+      "label": "b.js",
+      "parent": "",
+      "type": "group"
+    },
+    {
+      "id": "b.js_foo",
+      "label": "foo",
+      "parent": "b.js",
+      "type": "text"
+    },
+    {
+      "id": "b.js_bar",
+      "label": "bar",
+      "parent": "b.js",
+      "type": "text"
+    }
+  ],
+  "edges": [
+    {
+      "from": "a.js",
+      "to": "b.js",
+      "label": "imports foo"
+    },
+    {
+      "from": "a.js",
+      "to": "b.js",
+      "label": "imports bar"
+    }
+  ]
+}
