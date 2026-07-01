@@ -30,13 +30,13 @@ jobs:
 
       # build with gopack
       - name: build and package binaries
-        uses: henryhale/gopack@v1.0.3
+        uses: henryhale/gopack@master
         with:
           name: depgraph
           path: "."
           dest: ./dist/
-          ldflags: "-s -w -X 'main.version=$(git describe --tags)'"
-          checksum: checksums.txt
+          ldflags: "-s -w"
+          includeVersion: true
 
       - name: list binaries
         run: ls ./dist/
@@ -48,7 +48,7 @@ jobs:
           files: ./dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: generate CHANGELOG.md
         run: npx auto-changelog
 
