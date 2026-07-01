@@ -12,7 +12,10 @@ lint:
 	chmod +x ./scripts/lint.sh
 	./scripts/lint.sh
 
+test:
+	go test ./...
+
 clean:
 	rm -f depgraph
 
-.PHONY: tidy run build lint clean
+.PHONY: tidy run build lint clean test
