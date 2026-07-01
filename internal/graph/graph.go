@@ -1,6 +1,8 @@
 package graph
 
 import (
+	"sort"
+
 	"github.com/henryhale/depgraph/internal/lang"
 )
 
@@ -28,17 +30,24 @@ func GenerateGraphData(deps *DependencyGraph) *Graph {
 	nodes := []Node{}
 	edges := []Edge{}
 
-	ids := make(map[string]struct{})
-	idExists := func(id string) bool {
-		_, found := ids[id]
+	nodeIDs := make(map[string]struct{})
+	nodeExists := func(id string) bool {
+		_, found := nodeIDs[id]
 		return found
 	}
 
-	for file, result := range *deps {
-		if idExists(file) {
+	// edges are deduplicated on their own key space so that a file->file
+	// dependency carrying several distinct imports is not collapsed into one.
+	edgeIDs := make(map[string]struct{})
+
+	// iterate files in a stable order so the generated graph is reproducible
+	// across runs (Go map iteration order is randomized).
+	for _, file := range sortedKeys(*deps) {
+		result := (*deps)[file]
+		if nodeExists(file) {
 			continue
 		}
-		ids[file] = struct{}{}
+		nodeIDs[file] = struct{}{}
 
 		// add file node
 		nodes = append(nodes, Node{
@@ -51,10 +60,10 @@ func GenerateGraphData(deps *DependencyGraph) *Graph {
 		// add exports as child nodes to file
 		for _, export := range result.Exports {
 			id := file + "_" + export
-			if len(export) == 0 || idExists(id) {
+			if len(export) == 0 || nodeExists(id) {
 				continue
 			}
-			ids[id] = struct{}{}
+			nodeIDs[id] = struct{}{}
 
 			nodes = append(nodes, Node{
 				ID:     id,
@@ -64,14 +73,19 @@ func GenerateGraphData(deps *DependencyGraph) *Graph {
 			})
 		}
 
-		// add edges for imports
-		for importedFile, items := range result.Imports {
-			for _, item := range items {
-				id := file + importedFile
-				if len(item) == 0 || idExists(id) {
+		// add edges for imports, one per distinct imported item
+		for _, importedFile := range sortedImportKeys(result.Imports) {
+			for _, item := range result.Imports[importedFile] {
+				if len(item) == 0 {
 					continue
 				}
-				ids[id] = struct{}{}
+				// NUL separators keep the key unambiguous for arbitrary paths
+				// and item names (avoids "ab"+"c" == "a"+"bc" collisions).
+				id := file + "\x00" + importedFile + "\x00" + item
+				if _, dup := edgeIDs[id]; dup {
+					continue
+				}
+				edgeIDs[id] = struct{}{}
 
 				edges = append(edges, Edge{
 					From:  file,
@@ -86,4 +100,24 @@ func GenerateGraphData(deps *DependencyGraph) *Graph {
 	graph := Graph{Nodes: nodes, Edges: edges}
 
 	return &graph
+}
+
+// sortedKeys returns the file paths of a dependency graph in lexical order.
+func sortedKeys(deps DependencyGraph) []string {
+	keys := make([]string, 0, len(deps))
+	for k := range deps {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+// sortedImportKeys returns the imported paths of a file in lexical order.
+func sortedImportKeys(imports map[string][]string) []string {
+	keys := make([]string, 0, len(imports))
+	for k := range imports {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }

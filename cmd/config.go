@@ -33,8 +33,8 @@ func ParseConfig() Config {
 	config.IgnoredPaths = strings.Split(*ignoredPaths, ",")
 
 	config.ReplacePaths = make(map[string]string)
-	segments := strings.Split(*replacePaths, ",")
-	for _, segment := range segments {
+	segments := strings.SplitSeq(*replacePaths, ",")
+	for segment := range segments {
 		v := strings.Split(segment, ":")
 		if len(v) == 2 {
 			config.ReplacePaths[v[0]] = v[1]

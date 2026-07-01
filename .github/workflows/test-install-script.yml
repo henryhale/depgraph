@@ -1,9 +1,9 @@
-name: test installation via script 
+name: test installation via script
 
 on:
   push:
     branches:
-      -master
+      - master
   workflow_dispatch:
 
 jobs:
@@ -18,3 +18,4 @@ jobs:
         run: |
           which depgraph
           depgraph -v
+          depgraph -h

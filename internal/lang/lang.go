@@ -1,7 +1,10 @@
 package lang
 
 import (
+	"regexp"
 	"strings"
+
+	"github.com/henryhale/depgraph/internal/util"
 )
 
 type SourceFile struct {
@@ -47,6 +50,40 @@ type Language struct {
 	Comments *[]string
 	// imports and exports extractor
 	Extract func(*ExtractorOptions)
+}
+
+// Analyze runs a language's rules over a single file's source code and returns
+// the imports and exports it declares. The code is first preprocessed to strip
+// comments so commented-out statements are not mistaken for real ones. This is
+// the core per-file extraction step, factored out so it can be tested directly.
+func Analyze(l Language, code string, file string, replacers *map[string]string) SourceFile {
+	result := SourceFile{
+		Imports: make(map[string][]string),
+		Exports: []string{},
+		Local:   true,
+	}
+
+	src := util.Preprocess(code, l.Comments)
+
+	opts := &ExtractorOptions{
+		Result:    &result,
+		File:      &file,
+		Replacers: replacers,
+	}
+
+	for i := range l.Rules {
+		rule := l.Rules[i]
+		re := regexp.MustCompile(rule.RegExp)
+		matches := re.FindAllStringSubmatch(src, -1)
+		for _, match := range matches {
+			m := match
+			opts.Rule = &rule
+			opts.Match = &m
+			l.Extract(opts)
+		}
+	}
+
+	return result
 }
 
 func Get(ext string) (lang Language, supported bool) {
