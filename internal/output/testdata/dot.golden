@@ -1,0 +1,22 @@
+digraph depgraph {
+  graph [bgcolor="#ffffff", rankdir=LR];
+  node [shape=box, style=filled, fontcolor="#333333", fillcolor="#ffe082"];
+  1 [label="a.js" shape=ellipse style=filled fillcolor=lightgray penwidth=0.2];
+  2 [label="main"];
+  3 [label="b.js" shape=ellipse style=filled fillcolor=lightgray penwidth=0.2];
+  4 [label="foo"];
+  5 [label="bar"];
+  1->4 [label="imports"];
+  1->5 [label="imports"];
+  subgraph cluster_1 {
+    style=dashed;
+    1;
+    2;
+  }
+  subgraph cluster_2 {
+    style=dashed;
+    3;
+    4;
+    5;
+  }
+}
